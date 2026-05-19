@@ -1,0 +1,3318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAT Operating — Dashboard Executivo | Programa de Otimização de Água Potável</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter+Tight:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --navy-deep: #0A1428;
+    --navy: #0F1F3D;
+    --navy-mid: #1F3864;
+    --navy-light: #2E4F7F;
+    --gold: #C9A961;
+    --gold-light: #E8D49C;
+    --ice: #E8F1FA;
+    --white: #FFFFFF;
+    --slate-50: #F8FAFC;
+    --slate-100: #F1F5F9;
+    --slate-200: #E2E8F0;
+    --slate-400: #94A3B8;
+    --slate-600: #475569;
+    --slate-800: #1E293B;
+    --emerald: #10B981;
+    --emerald-dark: #047857;
+    --amber: #F59E0B;
+    --red: #DC2626;
+    
+    --font-display: 'Cormorant Garamond', Georgia, serif;
+    --font-body: 'Inter Tight', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    --shadow-sm: 0 1px 3px rgba(15, 31, 61, 0.08);
+    --shadow-md: 0 4px 12px rgba(15, 31, 61, 0.10);
+    --shadow-lg: 0 12px 32px rgba(15, 31, 61, 0.15);
+    --shadow-xl: 0 24px 60px rgba(15, 31, 61, 0.20);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body);
+    color: var(--slate-800);
+    background: var(--slate-50);
+    line-height: 1.6;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+}
+
+/* ============ NAVEGAÇÃO TOPO ============ */
+.topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 72px;
+    background: rgba(10, 20, 40, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.15);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    padding: 0 48px;
+    justify-content: space-between;
+}
+
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.topbar-logo {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.topbar-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+.topbar-text .name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--white);
+    letter-spacing: 0.5px;
+}
+
+.topbar-text .tagline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+}
+
+.topbar-nav {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+}
+
+.topbar-nav a {
+    color: var(--ice);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    transition: color 0.2s;
+    position: relative;
+}
+
+.topbar-nav a:hover { color: var(--gold); }
+
+.topbar-nav a:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -6px;
+    left: 0; right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s;
+}
+
+.topbar-nav a:hover::after { transform: scaleX(1); }
+
+.cta-button {
+    background: var(--gold);
+    color: var(--navy-deep);
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+}
+
+.cta-button:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(201, 169, 97, 0.3);
+}
+
+/* ============ HERO ============ */
+.hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 50%, var(--navy-mid) 100%);
+    position: relative;
+    padding: 120px 48px 80px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 20% 10%, rgba(201, 169, 97, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(46, 79, 127, 0.30) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(201, 169, 97, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 169, 97, 0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+}
+
+.hero-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 80px;
+    align-items: center;
+}
+
+.hero-text .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.hero-text .eyebrow::before {
+    content: '';
+    width: 32px;
+    height: 1px;
+    background: var(--gold);
+}
+
+.hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(48px, 6vw, 88px);
+    font-weight: 500;
+    line-height: 1.02;
+    color: var(--white);
+    letter-spacing: -1.5px;
+    margin-bottom: 32px;
+}
+
+.hero-title em {
+    font-style: italic;
+    color: var(--gold);
+    font-weight: 600;
+}
+
+.hero-title .accent {
+    display: block;
+    font-family: var(--font-body);
+    font-size: 0.4em;
+    font-weight: 300;
+    color: var(--ice);
+    margin-top: 24px;
+    letter-spacing: 0;
+    line-height: 1.5;
+    max-width: 580px;
+}
+
+.hero-metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(201, 169, 97, 0.20);
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.metric .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.metric .value {
+    font-family: var(--font-display);
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1;
+}
+
+.metric .sub {
+    font-size: 12px;
+    color: var(--slate-400);
+    margin-top: 4px;
+}
+
+.hero-card {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(201, 169, 97, 0.20);
+    border-radius: 4px;
+    padding: 40px;
+    position: relative;
+}
+
+.hero-card::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: -1px;
+    width: 32px;
+    height: 32px;
+    border-top: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
+}
+
+.hero-card::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; right: -1px;
+    width: 32px;
+    height: 32px;
+    border-bottom: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+}
+
+.hero-card-header {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.consolidated-total {
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+}
+
+.consolidated-currency {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    margin-bottom: 32px;
+}
+
+.consolidated-breakdown {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.10);
+    font-size: 14px;
+}
+
+.breakdown-row:last-child { border-bottom: none; }
+
+.breakdown-row .name {
+    color: var(--ice);
+    font-weight: 500;
+}
+
+.breakdown-row .val {
+    color: var(--gold);
+    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+/* ============ SECTION ============ */
+section.content {
+    padding: 120px 48px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.section-header {
+    margin-bottom: 64px;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 48px;
+    align-items: end;
+}
+
+.section-number {
+    font-family: var(--font-display);
+    font-size: 120px;
+    font-weight: 500;
+    color: var(--navy);
+    line-height: 0.8;
+    letter-spacing: -3px;
+    opacity: 0.12;
+}
+
+.section-title-block .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+
+.section-title-block h2 {
+    font-family: var(--font-display);
+    font-size: 56px;
+    font-weight: 500;
+    color: var(--navy-deep);
+    line-height: 1.05;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+}
+
+.section-title-block h2 em {
+    font-style: italic;
+    color: var(--navy-mid);
+}
+
+.section-title-block .lede {
+    font-size: 17px;
+    color: var(--slate-600);
+    max-width: 720px;
+    line-height: 1.55;
+}
+
+/* ============ CARDS POR CIA ============ */
+.airlines-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+}
+
+.airline-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 4px;
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.airline-card:hover {
+    border-color: var(--gold);
+    box-shadow: var(--shadow-xl);
+    transform: translateY(-4px);
+}
+
+.airline-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--navy-mid), var(--gold));
+}
+
+.airline-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+}
+
+.airline-name {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--navy-deep);
+    letter-spacing: -0.5px;
+    line-height: 1;
+}
+
+.airline-flag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--slate-400);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: 1px solid var(--slate-200);
+    padding: 4px 10px;
+    border-radius: 100px;
+}
+
+.airline-hero-number {
+    font-family: var(--font-display);
+    font-size: 52px;
+    font-weight: 600;
+    color: var(--navy-deep);
+    line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 4px;
+}
+
+.airline-hero-currency {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+}
+
+.airline-metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--slate-200);
+    padding-top: 24px;
+}
+
+.airline-metric {
+    padding: 0 16px;
+}
+
+.airline-metric:first-child {
+    padding-left: 0;
+    border-right: 1px solid var(--slate-200);
+}
+
+.airline-metric:last-child { padding-right: 0; }
+
+.airline-metric .lbl {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--slate-400);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.airline-metric .val {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--navy-deep);
+}
+
+.airline-metric .val small {
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--slate-600);
+    font-weight: 400;
+}
+
+.airline-details {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid var(--slate-200);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.detail-pill {
+    text-align: center;
+}
+
+.detail-pill .num {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy-mid);
+    line-height: 1;
+}
+
+.detail-pill .lbl {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--slate-400);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+/* ============ SENSIBILIDADE ============ */
+.sensitivity-section {
+    background: var(--navy-deep);
+    color: var(--ice);
+    padding: 120px 48px;
+    position: relative;
+    overflow: hidden;
+    margin-top: 0;
+}
+
+.sensitivity-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 0% 0%, rgba(201, 169, 97, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 100% 100%, rgba(46, 79, 127, 0.30) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.sensitivity-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+}
+
+.sensitivity-header h2 {
+    font-family: var(--font-display);
+    font-size: 56px;
+    color: var(--white);
+    margin-bottom: 16px;
+    font-weight: 500;
+    letter-spacing: -1px;
+    line-height: 1.05;
+}
+
+.sensitivity-header h2 em {
+    color: var(--gold);
+    font-style: italic;
+}
+
+.sensitivity-header .lede {
+    font-size: 18px;
+    color: var(--slate-400);
+    max-width: 760px;
+    margin-bottom: 56px;
+    line-height: 1.55;
+}
+
+.sensitivity-control {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(201, 169, 97, 0.20);
+    border-radius: 4px;
+    padding: 36px;
+    margin-bottom: 48px;
+}
+
+.control-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: 32px;
+    align-items: center;
+}
+
+.control-group label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.delta-input {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(201, 169, 97, 0.30);
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 24px;
+    font-weight: 600;
+    padding: 12px 16px;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
+}
+
+.delta-input:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.10);
+}
+
+.delta-slider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 4px;
+    background: rgba(201, 169, 97, 0.20);
+    border-radius: 2px;
+    outline: none;
+}
+
+.delta-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.20);
+}
+
+.delta-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: none;
+}
+
+.sign-toggle {
+    display: flex;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 4px;
+    padding: 4px;
+    border: 1px solid rgba(201, 169, 97, 0.20);
+}
+
+.sign-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: var(--slate-400);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 14px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sign-btn.active {
+    background: var(--gold);
+    color: var(--navy-deep);
+}
+
+.sensitivity-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 64px;
+}
+
+.sens-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(201, 169, 97, 0.15);
+    border-radius: 4px;
+    padding: 32px;
+    transition: all 0.3s;
+}
+
+.sens-card:hover {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.sens-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.sens-card-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    color: var(--white);
+    font-weight: 600;
+}
+
+.sens-card-currency {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    border: 1px solid rgba(201, 169, 97, 0.30);
+    padding: 4px 10px;
+    border-radius: 100px;
+}
+
+.sens-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.sens-table th {
+    text-align: right;
+    padding: 10px 8px;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.20);
+    font-weight: 500;
+}
+
+.sens-table th:first-child { text-align: left; }
+
+.sens-table td {
+    padding: 12px 8px;
+    text-align: right;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    color: var(--ice);
+    font-family: var(--font-mono);
+    font-size: 13px;
+}
+
+.sens-table td:first-child {
+    text-align: left;
+    color: var(--slate-400);
+}
+
+.sens-table tr:last-child td {
+    border-bottom: none;
+    border-top: 1px solid rgba(201, 169, 97, 0.30);
+    padding-top: 16px;
+    font-weight: 700;
+    color: var(--gold);
+}
+
+.sens-table .net-col { color: var(--emerald-light, #6EE7B7); }
+.sens-table tr:last-child .net-col { color: var(--gold); }
+
+/* ============ ESCALA SENSIBILIDADE ============ */
+.scale-card {
+    background: rgba(201, 169, 97, 0.05);
+    border: 1px solid rgba(201, 169, 97, 0.30);
+    border-radius: 4px;
+    padding: 40px;
+    margin-top: 32px;
+}
+
+.scale-header {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+}
+
+.scale-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.scale-table th, .scale-table td {
+    padding: 14px 16px;
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--ice);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.10);
+}
+
+.scale-table th {
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.30);
+}
+
+.scale-table th:first-child, .scale-table td:first-child {
+    text-align: left;
+}
+
+.scale-table .cia-name {
+    font-family: var(--font-display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+/* ============ CENÁRIO MAIO ============ */
+.market-section {
+    background: var(--slate-50);
+    padding: 120px 48px;
+}
+
+.market-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.market-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 48px;
+}
+
+.hub-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 4px;
+    padding: 36px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.hub-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--navy-mid);
+}
+
+.hub-flag {
+    font-size: 24px;
+    margin-bottom: 16px;
+}
+
+.hub-name {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    color: var(--navy-deep);
+    margin-bottom: 4px;
+    line-height: 1;
+}
+
+.hub-code {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-400);
+    letter-spacing: 2px;
+    margin-bottom: 24px;
+}
+
+.hub-price {
+    font-family: var(--font-display);
+    font-size: 38px;
+    font-weight: 600;
+    color: var(--navy-deep);
+    line-height: 1;
+}
+
+.hub-delta {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--red);
+    margin-top: 8px;
+    font-weight: 600;
+}
+
+.hub-source {
+    font-size: 11px;
+    color: var(--slate-400);
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--slate-200);
+    font-style: italic;
+}
+
+/* ============ COMPARATIVO ============ */
+.comparison-table {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 48px;
+    box-shadow: var(--shadow-sm);
+}
+
+.comparison-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.comparison-table th {
+    background: var(--navy-deep);
+    color: var(--white);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 18px 24px;
+    text-align: right;
+    font-weight: 500;
+}
+
+.comparison-table th:first-child { text-align: left; }
+
+.comparison-table td {
+    padding: 20px 24px;
+    text-align: right;
+    border-bottom: 1px solid var(--slate-100);
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--slate-800);
+}
+
+.comparison-table td:first-child {
+    text-align: left;
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy-deep);
+}
+
+.comparison-table tr:last-child td { border-bottom: none; }
+
+.comparison-table .pos { color: var(--emerald-dark); font-weight: 700; }
+.comparison-table .highlight {
+    background: rgba(16, 185, 129, 0.05);
+    font-weight: 600;
+    color: var(--emerald-dark);
+}
+
+/* ============ DECLARAÇÕES ============ */
+.quotes-section {
+    padding: 120px 48px;
+    background: var(--white);
+}
+
+.quotes-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.quotes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 56px;
+}
+
+.quote-card {
+    background: var(--slate-50);
+    border-left: 3px solid var(--gold);
+    padding: 36px 40px;
+    position: relative;
+    transition: all 0.3s;
+}
+
+.quote-card:hover {
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
+}
+
+.quote-mark {
+    font-family: var(--font-display);
+    font-size: 80px;
+    color: var(--gold);
+    line-height: 0.5;
+    margin-bottom: 16px;
+    opacity: 0.4;
+}
+
+.quote-text {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-style: italic;
+    color: var(--navy-deep);
+    line-height: 1.4;
+    margin-bottom: 24px;
+}
+
+.quote-author {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--navy-mid);
+    letter-spacing: 0.5px;
+}
+
+.quote-role {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--slate-400);
+    margin-top: 4px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* ============ FOOTER ============ */
+footer {
+    background: var(--navy-deep);
+    color: var(--ice);
+    padding: 80px 48px 40px;
+    position: relative;
+}
+
+.footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr;
+    gap: 64px;
+    padding-bottom: 56px;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.15);
+}
+
+.footer-brand img {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    margin-bottom: 24px;
+}
+
+.footer-brand h3 {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--white);
+}
+
+.footer-brand p {
+    font-size: 14px;
+    color: var(--slate-400);
+    line-height: 1.6;
+    max-width: 400px;
+}
+
+.footer-col h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+}
+
+.footer-col ul {
+    list-style: none;
+}
+
+.footer-col li {
+    font-size: 13px;
+    color: var(--slate-400);
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.footer-bottom {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--slate-400);
+}
+
+.footer-bottom .right {
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1100px) {
+    .hero-content { grid-template-columns: 1fr; gap: 48px; }
+    .airlines-grid, .sensitivity-grid, .quotes-grid { grid-template-columns: 1fr; }
+    .market-grid { grid-template-columns: 1fr; }
+    .section-header { grid-template-columns: 1fr; gap: 16px; }
+    .section-number { font-size: 80px; }
+    .footer-inner { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+    .topbar { padding: 0 20px; height: 64px; }
+    .topbar-nav { display: none; }
+    section.content { padding: 80px 20px; }
+    .hero { padding: 100px 20px 60px; }
+    .hero-metrics { grid-template-columns: 1fr 1fr; }
+    .sensitivity-section, .market-section, .quotes-section { padding: 80px 20px; }
+    .control-row { grid-template-columns: 1fr; gap: 20px; }
+    footer { padding: 60px 20px 30px; }
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 0.8s forwards;
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+
+/* ============ PAINEL DE CONTROLE ============ */
+.control-panel {
+    position: fixed;
+    top: 88px;
+    right: 24px;
+    background: rgba(10, 20, 40, 0.96);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(201, 169, 97, 0.30);
+    border-radius: 6px;
+    padding: 0;
+    z-index: 99;
+    width: 320px;
+    box-shadow: 0 20px 60px rgba(10, 20, 40, 0.40);
+    transition: transform 0.3s ease;
+    transform: translateX(0);
+}
+
+.control-panel.collapsed {
+    transform: translateX(calc(100% + 24px));
+}
+
+.control-toggle {
+    position: fixed;
+    top: 88px;
+    right: 24px;
+    background: var(--gold);
+    color: var(--navy-deep);
+    border: none;
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    z-index: 98;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(201, 169, 97, 0.30);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.control-toggle.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.control-toggle:hover {
+    background: var(--gold-light);
+    transform: translateY(-1px);
+}
+
+.control-toggle-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    position: relative;
+}
+
+.control-toggle-icon::before, .control-toggle-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--navy-deep);
+    border-radius: 1px;
+}
+
+.control-toggle-icon::before {
+    width: 12px; height: 2px;
+    top: 5px; left: 0;
+}
+
+.control-toggle-icon::after {
+    width: 2px; height: 12px;
+    top: 0; left: 5px;
+}
+
+.control-panel-header {
+    padding: 16px 20px;
+    background: rgba(201, 169, 97, 0.08);
+    border-bottom: 1px solid rgba(201, 169, 97, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.control-panel-title {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.control-close {
+    background: none;
+    border: none;
+    color: var(--slate-400);
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1;
+    padding: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.control-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--gold);
+}
+
+.control-panel-body {
+    padding: 20px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.control-panel-body::-webkit-scrollbar {
+    width: 4px;
+}
+
+.control-panel-body::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.control-panel-body::-webkit-scrollbar-thumb {
+    background: rgba(201, 169, 97, 0.30);
+    border-radius: 2px;
+}
+
+.control-group-section {
+    margin-bottom: 24px;
+}
+
+.control-group-section:last-child {
+    margin-bottom: 0;
+}
+
+.control-group-label {
+    font-family: var(--font-mono);
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: block;
+    font-weight: 600;
+}
+
+/* Pills de filtro de cia */
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.filter-pill {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--slate-400);
+    border: 1px solid rgba(201, 169, 97, 0.15);
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+}
+
+.filter-pill:hover {
+    border-color: var(--gold);
+    color: var(--ice);
+}
+
+.filter-pill.active {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+    font-weight: 700;
+}
+
+/* Toggle switches para seções */
+.section-toggles {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.section-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.section-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.section-toggle-label {
+    color: var(--ice);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.section-toggle-sub {
+    color: var(--slate-400);
+    font-size: 10px;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+    margin-top: 2px;
+}
+
+.switch {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    background: rgba(148, 163, 184, 0.20);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+
+.switch.on {
+    background: var(--gold);
+}
+
+.switch::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.20);
+}
+
+.switch.on::after {
+    transform: translateX(16px);
+}
+
+/* Modo presets */
+.mode-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+}
+
+.mode-btn {
+    padding: 10px 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(201, 169, 97, 0.15);
+    color: var(--ice);
+    border-radius: 4px;
+    font-family: var(--font-body);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.mode-btn:hover {
+    border-color: var(--gold);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.mode-btn.active {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+    font-weight: 700;
+}
+
+.mode-btn-icon {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.mode-btn-desc {
+    display: block;
+    font-size: 9px;
+    margin-top: 2px;
+    opacity: 0.7;
+    font-family: var(--font-mono);
+    letter-spacing: 0.5px;
+}
+
+/* Esconder elementos quando filtrados */
+.airline-card.hidden {
+    display: none;
+}
+
+.sens-card.hidden {
+    display: none;
+}
+
+section.hidden {
+    display: none !important;
+}
+
+/* Quando só 1 cia ativa, expande */
+.airlines-grid.single-col {
+    grid-template-columns: 1fr;
+}
+
+.sensitivity-grid.single-col {
+    grid-template-columns: 1fr;
+}
+
+/* Modo Print */
+@media print {
+    .topbar, .control-panel, .control-toggle {
+        display: none !important;
+    }
+    .hero {
+        min-height: auto;
+        padding: 40px 24px;
+        page-break-after: always;
+    }
+    section.content, .sensitivity-section, .market-section, .quotes-section {
+        padding: 40px 24px;
+        page-break-inside: avoid;
+    }
+    .airline-card, .sens-card, .hub-card, .quote-card {
+        page-break-inside: avoid;
+        break-inside: avoid;
+    }
+}
+
+body.print-mode .topbar,
+body.print-mode .control-panel,
+body.print-mode .control-toggle {
+    display: none !important;
+}
+
+body.print-mode .hero {
+    min-height: auto;
+    padding: 60px 48px;
+}
+
+body.print-mode .sensitivity-control {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .control-panel {
+        right: 12px;
+        left: 12px;
+        width: auto;
+    }
+    .control-toggle {
+        right: 12px;
+    }
+}
+
+
+/* ============ FILTRO POR ANO ============ */
+.year-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.year-pill {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--slate-400);
+    border: 1px solid rgba(201, 169, 97, 0.15);
+    padding: 5px 9px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.year-pill:hover {
+    border-color: var(--gold);
+    color: var(--ice);
+}
+
+.year-pill.active {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+}
+
+/* ============ SELETOR DE MOEDA ============ */
+.currency-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+}
+
+.currency-btn {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--slate-400);
+    border: 1px solid rgba(201, 169, 97, 0.15);
+    padding: 8px 4px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.currency-btn:hover {
+    border-color: var(--gold);
+    color: var(--ice);
+}
+
+.currency-btn.active {
+    background: var(--gold);
+    color: var(--navy-deep);
+    border-color: var(--gold);
+}
+
+.currency-btn-sym {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.currency-btn-code {
+    display: block;
+    font-size: 9px;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* ============ MODO SLIDE (1 CIA POR TELA) ============ */
+body.slide-mode .topbar,
+body.slide-mode .control-panel,
+body.slide-mode .control-toggle {
+    display: none !important;
+}
+
+body.slide-mode .hero,
+body.slide-mode section.content,
+body.slide-mode .market-section,
+body.slide-mode .sensitivity-section,
+body.slide-mode .quotes-section,
+body.slide-mode footer {
+    display: none !important;
+}
+
+body.slide-mode #slide-stage {
+    display: flex !important;
+}
+
+#slide-stage {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 50%, var(--navy-mid) 100%);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
+    overflow: hidden;
+}
+
+#slide-stage::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse at 20% 10%, rgba(201, 169, 97, 0.10) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 90%, rgba(46, 79, 127, 0.30) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+#slide-stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(201, 169, 97, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201, 169, 97, 0.03) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+}
+
+.slide-content {
+    max-width: 1200px;
+    width: 100%;
+    color: var(--white);
+    position: relative;
+    z-index: 2;
+}
+
+.slide-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid rgba(201, 169, 97, 0.20);
+}
+
+.slide-brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.slide-brand img {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+}
+
+.slide-brand-text .name {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.slide-brand-text .tagline {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+}
+
+.slide-counter {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 2px;
+}
+
+.slide-airline-name {
+    font-family: var(--font-display);
+    font-size: 96px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 0.95;
+    letter-spacing: -2px;
+    margin-bottom: 8px;
+}
+
+.slide-airline-tagline {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 56px;
+}
+
+.slide-hero-number {
+    font-family: var(--font-display);
+    font-size: 140px;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    letter-spacing: -4px;
+    margin-bottom: 8px;
+}
+
+.slide-hero-currency {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: var(--slate-400);
+    letter-spacing: 2px;
+    margin-bottom: 64px;
+}
+
+.slide-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    padding-top: 40px;
+    border-top: 1px solid rgba(201, 169, 97, 0.20);
+}
+
+.slide-metric .lbl {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+
+.slide-metric .val {
+    font-family: var(--font-display);
+    font-size: 36px;
+    font-weight: 600;
+    color: var(--white);
+    line-height: 1;
+}
+
+.slide-metric .sub {
+    font-size: 12px;
+    color: var(--slate-400);
+    margin-top: 6px;
+}
+
+.slide-nav {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    z-index: 10;
+}
+
+.slide-nav-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(201, 169, 97, 0.30);
+    color: var(--gold);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.slide-nav-btn:hover {
+    background: var(--gold);
+    color: var(--navy-deep);
+}
+
+.slide-nav-dots {
+    display: flex;
+    gap: 8px;
+    padding: 0 16px;
+}
+
+.slide-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.20);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.slide-dot.active {
+    background: var(--gold);
+    width: 24px;
+    border-radius: 5px;
+}
+
+.slide-exit {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(201, 169, 97, 0.30);
+    color: var(--ice);
+    padding: 10px 16px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 10;
+}
+
+.slide-exit:hover {
+    background: var(--gold);
+    color: var(--navy-deep);
+}
+
+/* Indicador de conversão de moeda */
+.currency-converted-badge {
+    display: inline-block;
+    background: rgba(201, 169, 97, 0.15);
+    color: var(--gold);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    margin-left: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- ============ TOPBAR ============ -->
+<nav class="topbar">
+    <div class="topbar-brand">
+        <img src="data:image/jpeg;base64,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" alt="TAT Operating" class="topbar-logo">
+        <div class="topbar-text">
+            <div class="name">TAT Operating</div>
+            <div class="tagline">Aviation Performance</div>
+        </div>
+    </div>
+    <div class="topbar-nav">
+        <a href="#overview">Visão Geral</a>
+        <a href="#airlines">Companhias</a>
+        <a href="#market">Mercado QAV</a>
+        <a href="#sensitivity">Sensibilidade</a>
+        <a href="#cta" class="cta-button">Solicitar Reunião</a>
+    </div>
+</nav>
+
+<!-- ============ PAINEL DE CONTROLE ============ -->
+<button class="control-toggle" id="controlToggle">
+    <span class="control-toggle-icon"></span>
+    Filtros
+</button>
+
+<aside class="control-panel" id="controlPanel">
+    <div class="control-panel-header">
+        <div class="control-panel-title">Controles · Customizar Vista</div>
+        <button class="control-close" id="controlClose">✕</button>
+    </div>
+    <div class="control-panel-body">
+        
+        <!-- Modo de Apresentação -->
+        <div class="control-group-section">
+            <label class="control-group-label">Modo de Apresentação</label>
+            <div class="mode-buttons">
+                <button class="mode-btn active" data-mode="full" title="Tudo visível">
+                    <span class="mode-btn-icon">⊞</span>
+                    Completo
+                    <span class="mode-btn-desc">Tudo</span>
+                </button>
+                <button class="mode-btn" data-mode="compact" title="Sem declarações">
+                    <span class="mode-btn-icon">⊟</span>
+                    Compacto
+                    <span class="mode-btn-desc">Sem citações</span>
+                </button>
+                <button class="mode-btn" data-mode="financial" title="Foco no número">
+                    <span class="mode-btn-icon">$</span>
+                    Financeiro
+                    <span class="mode-btn-desc">Hero + cias</span>
+                </button>
+                <button class="mode-btn" data-mode="print" title="Pronto para imprimir">
+                    <span class="mode-btn-icon">⎙</span>
+                    Print
+                    <span class="mode-btn-desc">Limpa</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Filtro de Companhias -->
+        <div class="control-group-section">
+            <label class="control-group-label">Companhias Visíveis</label>
+            <div class="filter-pills" id="airlineFilters">
+                <button class="filter-pill active" data-airline="all">Todas</button>
+                <button class="filter-pill active" data-airline="GOL">GOL</button>
+                <button class="filter-pill active" data-airline="Azul">Azul</button>
+                <button class="filter-pill active" data-airline="TAP">TAP</button>
+                <button class="filter-pill active" data-airline="Etihad">Etihad</button>
+            </div>
+        </div>
+        
+        <!-- Toggle de Seções -->
+        <div class="control-group-section">
+            <label class="control-group-label">Seções Visíveis</label>
+            <div class="section-toggles">
+                <div class="section-toggle" data-section="airlines">
+                    <div>
+                        <div class="section-toggle-label">01 · Companhias</div>
+                        <div class="section-toggle-sub">Cards por cia</div>
+                    </div>
+                    <div class="switch on"></div>
+                </div>
+                <div class="section-toggle" data-section="market">
+                    <div>
+                        <div class="section-toggle-label">02 · Cenário QAV</div>
+                        <div class="section-toggle-sub">3 hubs + comparativo</div>
+                    </div>
+                    <div class="switch on"></div>
+                </div>
+                <div class="section-toggle" data-section="sensitivity">
+                    <div>
+                        <div class="section-toggle-label">03 · Sensibilidade</div>
+                        <div class="section-toggle-sub">Tabelas interativas</div>
+                    </div>
+                    <div class="switch on"></div>
+                </div>
+                <div class="section-toggle" data-section="quotes">
+                    <div>
+                        <div class="section-toggle-label">04 · Declarações</div>
+                        <div class="section-toggle-sub">Citações C-level</div>
+                    </div>
+                    <div class="switch on"></div>
+                </div>
+            </div>
+        </div>
+        
+        
+        <!-- Filtro por Ano (Sensibilidade) -->
+        <div class="control-group-section">
+            <label class="control-group-label">Ano em destaque · Sensibilidade</label>
+            <div class="year-pills" id="yearFilters">
+                <button class="year-pill active" data-year="all">Todos</button>
+                <button class="year-pill" data-year="2026">2026</button>
+                <button class="year-pill" data-year="2027">2027</button>
+                <button class="year-pill" data-year="2028">2028</button>
+                <button class="year-pill" data-year="2029">2029</button>
+                <button class="year-pill" data-year="2030">2030</button>
+                <button class="year-pill" data-year="2031">2031</button>
+            </div>
+        </div>
+        
+        <!-- Seletor de Moeda -->
+        <div class="control-group-section">
+            <label class="control-group-label">Moeda de Apresentação</label>
+            <div class="currency-selector" id="currencySelector">
+                <button class="currency-btn active" data-currency="native" title="Cada cia na moeda nativa">
+                    <span class="currency-btn-sym">★</span>
+                    <span class="currency-btn-code">NATIVO</span>
+                </button>
+                <button class="currency-btn" data-currency="USD" title="Tudo em USD">
+                    <span class="currency-btn-sym">$</span>
+                    <span class="currency-btn-code">USD</span>
+                </button>
+                <button class="currency-btn" data-currency="BRL" title="Tudo em BRL">
+                    <span class="currency-btn-sym">R$</span>
+                    <span class="currency-btn-code">BRL</span>
+                </button>
+                <button class="currency-btn" data-currency="EUR" title="Tudo em EUR">
+                    <span class="currency-btn-sym">€</span>
+                    <span class="currency-btn-code">EUR</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Modo Slide -->
+        <div class="control-group-section">
+            <label class="control-group-label">Modo Slide (1 cia por tela)</label>
+            <button class="mode-btn" id="slideModeBtn" style="width:100%; padding:12px;">
+                ▶  Iniciar Apresentação
+            </button>
+        </div>
+
+        <!-- Ação Print -->
+        <div class="control-group-section">
+            <label class="control-group-label">Exportar</label>
+            <button class="mode-btn" id="printBtn" style="width:100%; padding:12px;">
+                ⎙  Imprimir / Salvar como PDF
+            </button>
+        </div>
+        
+    </div>
+</aside>
+
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="overview">
+    <div class="hero-content">
+        <div class="hero-text">
+            <div class="eyebrow fade-in">Dashboard Executivo · Maio 2026</div>
+            <h1 class="hero-title fade-in delay-1">
+                Programa de <em>Otimização</em><br>
+                de Água Potável<br>
+                em Aeronaves
+                <span class="accent">
+                    Análise consolidada de 4 estudos técnico-financeiros sobre captura de economia 
+                    operacional via metodologia ground-side TAT. Sem CAPEX. Sem modificação de aeronave. 
+                    Sem homologação regulatória.
+                </span>
+            </h1>
+            
+            <div class="hero-metrics">
+                <div class="metric">
+                    <div class="label">Companhias</div>
+                    <div class="value">4</div>
+                    <div class="sub">GOL · Azul · TAP · Etihad</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Frota Total</div>
+                    <div class="value">527</div>
+                    <div class="sub">aeronaves analisadas</div>
+                </div>
+                <div class="metric">
+                    <div class="label">Horizonte</div>
+                    <div class="value">6Y</div>
+                    <div class="sub">2026 — 2031</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="hero-card fade-in delay-2">
+            <div class="hero-card-header">
+                <span>Economia Consolidada · 6 Anos</span>
+                <span class="status-dot"></span>
+            </div>
+            <div class="consolidated-total">≈ US$ 103,5 MM</div>
+            <div class="consolidated-currency">Equivalente em USD · Taxas Mai/2026</div>
+            
+            <div class="consolidated-breakdown">
+                <div class="breakdown-row">
+                    <span class="name">GOL</span>
+                    <span class="val">R$ 180,14 MM</span>
+                </div>
+                <div class="breakdown-row">
+                    <span class="name">Azul</span>
+                    <span class="val">R$ 96,81 MM</span>
+                </div>
+                <div class="breakdown-row">
+                    <span class="name">TAP Air Portugal</span>
+                    <span class="val">€ 17,89 MM</span>
+                </div>
+                <div class="breakdown-row">
+                    <span class="name">Etihad Airways</span>
+                    <span class="val">US$ 35,98 MM</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ AIRLINES ============ -->
+<section class="content" id="airlines" data-section-name="airlines">
+    <div class="section-header">
+        <div class="section-number">01</div>
+        <div class="section-title-block">
+            <div class="eyebrow">Resultados por Companhia</div>
+            <h2>O <em>número</em> auditável<br>para cada operador</h2>
+            <p class="lede">
+                Cada economia parte de frota real, malha operacional vigente e premissa de QAV 
+                ajustada ao mercado de cada hub. Métodos validados pela equação de Breguet e por 
+                tabelas operacionais oficiais (Anexo 720 TAP, IATA 2011, Boeing ATA 38).
+            </p>
+        </div>
+    </div>
+    
+    <div class="airlines-grid">
+        <!-- GOL -->
+        <div class="airline-card" data-airline="GOL">
+            <div class="airline-header">
+                <div>
+                    <div class="airline-name">GOL Linhas Aéreas</div>
+                </div>
+                <div class="airline-flag">BR · BRL</div>
+            </div>
+            <div class="airline-hero-number">R$ 180,14 MM</div>
+            <div class="airline-hero-currency">Economia Bruta 6Y</div>
+            
+            <div class="airline-metrics">
+                <div class="airline-metric">
+                    <div class="lbl">TAT Fee</div>
+                    <div class="val">R$ 34,68<small> MM</small></div>
+                </div>
+                <div class="airline-metric">
+                    <div class="lbl">GOL Líquido</div>
+                    <div class="val">R$ 146,67<small> MM</small></div>
+                </div>
+            </div>
+            
+            <div class="airline-details">
+                <div class="detail-pill">
+                    <div class="num">140</div>
+                    <div class="lbl">Aeronaves</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">30,5M</div>
+                    <div class="lbl">Litros QAV 6Y</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">76 kt</div>
+                    <div class="lbl">CO₂ evitado</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AZUL -->
+        <div class="airline-card" data-airline="Azul">
+            <div class="airline-header">
+                <div>
+                    <div class="airline-name">Azul Linhas Aéreas</div>
+                </div>
+                <div class="airline-flag">BR · BRL</div>
+            </div>
+            <div class="airline-hero-number">R$ 96,81 MM</div>
+            <div class="airline-hero-currency">Economia Bruta 6Y</div>
+            
+            <div class="airline-metrics">
+                <div class="airline-metric">
+                    <div class="lbl">TAT Fee</div>
+                    <div class="val">R$ 18,73<small> MM</small></div>
+                </div>
+                <div class="airline-metric">
+                    <div class="lbl">Azul Líquido</div>
+                    <div class="val">R$ 78,98<small> MM</small></div>
+                </div>
+            </div>
+            
+            <div class="airline-details">
+                <div class="detail-pill">
+                    <div class="num">160</div>
+                    <div class="lbl">Aeronaves</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">16,2M</div>
+                    <div class="lbl">Litros QAV 6Y</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">41 kt</div>
+                    <div class="lbl">CO₂ evitado</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TAP -->
+        <div class="airline-card" data-airline="TAP">
+            <div class="airline-header">
+                <div>
+                    <div class="airline-name">TAP Air Portugal</div>
+                </div>
+                <div class="airline-flag">PT · EUR</div>
+            </div>
+            <div class="airline-hero-number">€ 17,89 MM</div>
+            <div class="airline-hero-currency">Economia Bruta 6Y · Inclui EU ETS</div>
+            
+            <div class="airline-metrics">
+                <div class="airline-metric">
+                    <div class="lbl">TAT Fee</div>
+                    <div class="val">€ 3,56<small> MM</small></div>
+                </div>
+                <div class="airline-metric">
+                    <div class="lbl">TAP Líquido</div>
+                    <div class="val">€ 14,25<small> MM</small></div>
+                </div>
+            </div>
+            
+            <div class="airline-details">
+                <div class="detail-pill">
+                    <div class="num">99</div>
+                    <div class="lbl">Aeronaves</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">16,8M</div>
+                    <div class="lbl">Litros QAV 6Y</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">45 kt</div>
+                    <div class="lbl">CO₂ evitado</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ETIHAD -->
+        <div class="airline-card" data-airline="Etihad">
+            <div class="airline-header">
+                <div>
+                    <div class="airline-name">Etihad Airways</div>
+                </div>
+                <div class="airline-flag">AE · USD</div>
+            </div>
+            <div class="airline-hero-number">US$ 35,98 MM</div>
+            <div class="airline-hero-currency">Economia Bruta 6Y</div>
+            
+            <div class="airline-metrics">
+                <div class="airline-metric">
+                    <div class="lbl">TAT Fee</div>
+                    <div class="val">US$ 8,71<small> MM</small></div>
+                </div>
+                <div class="airline-metric">
+                    <div class="lbl">Etihad Líquido</div>
+                    <div class="val">US$ 27,47<small> MM</small></div>
+                </div>
+            </div>
+            
+            <div class="airline-details">
+                <div class="detail-pill">
+                    <div class="num">128</div>
+                    <div class="lbl">Aeronaves</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">41,0M</div>
+                    <div class="lbl">Litros QAV 6Y</div>
+                </div>
+                <div class="detail-pill">
+                    <div class="num">131 kt</div>
+                    <div class="lbl">CO₂ evitado</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ MARKET / QAV ============ -->
+<section class="market-section" id="market" data-section-name="market">
+    <div class="market-inner">
+        <div class="section-header">
+            <div class="section-number">02</div>
+            <div class="section-title-block">
+                <div class="eyebrow">Cenário Macro · Maio 2026</div>
+                <h2>Preços <em>QAV</em><br>nos 3 hubs operacionais</h2>
+                <p class="lede">
+                    Pós-fechamento do Estreito de Ormuz (28 fev/2026), os preços de jet fuel 
+                    explodiram em mercados europeu e brasileiro. Refino local em Abu Dhabi protege 
+                    parcialmente o hub de Etihad. Dados de fontes primárias oficiais.
+                </p>
+            </div>
+        </div>
+        
+        <div class="market-grid">
+            <div class="hub-card">
+                <div class="hub-flag">🇧🇷</div>
+                <div class="hub-name">São Paulo</div>
+                <div class="hub-code">GRU · CGH</div>
+                <div class="hub-price">R$ 6,40<span style="font-size:24px;color:var(--slate-400);">–6,80</span></div>
+                <div class="hub-delta">▲ +100% vs fev/2026</div>
+                <div class="hub-source">Fonte: Petrobras, comunicado 01/mai/2026</div>
+            </div>
+            
+            <div class="hub-card">
+                <div class="hub-flag">🇵🇹</div>
+                <div class="hub-name">Lisboa</div>
+                <div class="hub-code">LIS</div>
+                <div class="hub-price">€ 1,20<span style="font-size:24px;color:var(--slate-400);">–1,30</span></div>
+                <div class="hub-delta">▲ +101% vs 2025</div>
+                <div class="hub-source">Fonte: IATA Jet Fuel Monitor, semana 01/mai/2026 (US$ 181/bbl)</div>
+            </div>
+            
+            <div class="hub-card">
+                <div class="hub-flag">🇦🇪</div>
+                <div class="hub-name">Abu Dhabi</div>
+                <div class="hub-code">AUH</div>
+                <div class="hub-price">US$ 1,15<span style="font-size:24px;color:var(--slate-400);">–1,25</span></div>
+                <div class="hub-delta">▲ +135% (Murban)</div>
+                <div class="hub-source">Fonte: ADNOC OSP, divulgação 28/abr/2026</div>
+            </div>
+        </div>
+        
+        <!-- Comparativo Original vs Maio/26 -->
+        <div class="comparison-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Companhia</th>
+                        <th>Estudo Original 6Y</th>
+                        <th>Cenário Maio/26 6Y</th>
+                        <th>Δ %</th>
+                        <th>TAT Recebe</th>
+                        <th>Cia Retém</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>GOL</td>
+                        <td>R$ 180,19 MM</td>
+                        <td>R$ 183,14 MM</td>
+                        <td class="pos">+1,6%</td>
+                        <td>R$ 35,33 MM</td>
+                        <td class="highlight">R$ 149,01 MM</td>
+                    </tr>
+                    <tr>
+                        <td>Azul</td>
+                        <td>R$ 96,11 MM</td>
+                        <td>R$ 97,71 MM</td>
+                        <td class="pos">+1,7%</td>
+                        <td>R$ 19,13 MM</td>
+                        <td class="highlight">R$ 79,48 MM</td>
+                    </tr>
+                    <tr>
+                        <td>TAP</td>
+                        <td>€ 13,88 MM</td>
+                        <td>€ 15,38 MM</td>
+                        <td class="pos">+10,8%</td>
+                        <td>€ 3,20 MM</td>
+                        <td class="highlight">€ 12,42 MM</td>
+                    </tr>
+                    <tr>
+                        <td>Etihad</td>
+                        <td>US$ 35,41 MM</td>
+                        <td>US$ 36,81 MM</td>
+                        <td class="pos">+4,0%</td>
+                        <td>US$ 9,01 MM</td>
+                        <td class="highlight">US$ 28,00 MM</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ============ SENSIBILIDADE ============ -->
+<section class="sensitivity-section" id="sensitivity" data-section-name="sensitivity">
+    <div class="sensitivity-inner">
+        <div class="sensitivity-header">
+            <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; color: var(--gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 16px;">03 · O hedge implícito</div>
+            <h2>Sensibilidade ao <em>QAV</em></h2>
+            <p class="lede">
+                Cada centavo importa. Para qualquer variação de preço do QAV, a economia bruta varia 
+                proporcionalmente. O programa funciona como hedge automático: se QAV sobe, captura mais; 
+                se cai, segue positivo. Downside zero.
+            </p>
+        </div>
+        
+        <div class="sensitivity-control">
+            <div class="control-row">
+                <div class="control-group">
+                    <label>ΔQAV Simulado</label>
+                    <input type="number" id="deltaInput" class="delta-input" value="0.05" step="0.01" min="0" max="2">
+                </div>
+                <div class="control-group">
+                    <label>Slider · 0 a 2,00</label>
+                    <input type="range" id="deltaSlider" class="delta-slider" min="0" max="2" step="0.01" value="0.05">
+                </div>
+                <div class="control-group">
+                    <label>Sinal</label>
+                    <div class="sign-toggle">
+                        <button class="sign-btn active" data-sign="+">+ Alta</button>
+                        <button class="sign-btn" data-sign="-">− Queda</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="sensitivity-grid">
+            <!-- GOL -->
+            <div class="sens-card" data-cia="GOL" data-sym="R$">
+                <div class="sens-card-header">
+                    <div class="sens-card-name">GOL</div>
+                    <div class="sens-card-currency">BRL</div>
+                </div>
+                <table class="sens-table">
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>QAV (ML)</th>
+                            <th>Δ Bruta</th>
+                            <th>Δ TAT</th>
+                            <th class="net-col">Δ Cia Líq</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-GOL"></tbody>
+                </table>
+            </div>
+            
+            <!-- AZUL -->
+            <div class="sens-card" data-cia="Azul" data-sym="R$">
+                <div class="sens-card-header">
+                    <div class="sens-card-name">Azul</div>
+                    <div class="sens-card-currency">BRL</div>
+                </div>
+                <table class="sens-table">
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>QAV (ML)</th>
+                            <th>Δ Bruta</th>
+                            <th>Δ TAT</th>
+                            <th class="net-col">Δ Cia Líq</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-Azul"></tbody>
+                </table>
+            </div>
+            
+            <!-- TAP -->
+            <div class="sens-card" data-cia="TAP" data-sym="€">
+                <div class="sens-card-header">
+                    <div class="sens-card-name">TAP</div>
+                    <div class="sens-card-currency">EUR</div>
+                </div>
+                <table class="sens-table">
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>QAV (ML)</th>
+                            <th>Δ Bruta</th>
+                            <th>Δ TAT</th>
+                            <th class="net-col">Δ Cia Líq</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-TAP"></tbody>
+                </table>
+            </div>
+            
+            <!-- ETIHAD -->
+            <div class="sens-card" data-cia="Etihad" data-sym="US$">
+                <div class="sens-card-header">
+                    <div class="sens-card-name">Etihad</div>
+                    <div class="sens-card-currency">USD</div>
+                </div>
+                <table class="sens-table">
+                    <thead>
+                        <tr>
+                            <th>Ano</th>
+                            <th>QAV (ML)</th>
+                            <th>Δ Bruta</th>
+                            <th>Δ TAT</th>
+                            <th class="net-col">Δ Cia Líq</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-Etihad"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Escala -->
+        <div class="scale-card">
+            <div class="scale-header">Escala de Sensibilidade · Bruta Acumulada 6Y</div>
+            <table class="scale-table">
+                <thead>
+                    <tr>
+                        <th>Companhia</th>
+                        <th>Δ 0,05</th>
+                        <th>Δ 0,10</th>
+                        <th>Δ 0,20</th>
+                        <th>Δ 0,50</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="cia-name">GOL</span> <span style="color:var(--slate-400);">· R$</span></td>
+                        <td>1.524.500</td>
+                        <td>3.049.000</td>
+                        <td>6.098.000</td>
+                        <td>15.245.000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cia-name">Azul</span> <span style="color:var(--slate-400);">· R$</span></td>
+                        <td>812.500</td>
+                        <td>1.625.000</td>
+                        <td>3.250.000</td>
+                        <td>8.125.000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cia-name">TAP</span> <span style="color:var(--slate-400);">· €</span></td>
+                        <td>841.000</td>
+                        <td>1.682.000</td>
+                        <td>3.364.000</td>
+                        <td>8.410.000</td>
+                    </tr>
+                    <tr>
+                        <td><span class="cia-name">Etihad</span> <span style="color:var(--slate-400);">· US$</span></td>
+                        <td>2.048.000</td>
+                        <td>4.096.000</td>
+                        <td>8.192.000</td>
+                        <td>20.480.000</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- ============ DECLARAÇÕES ============ -->
+<section class="quotes-section" data-section-name="quotes">
+    <div class="quotes-inner">
+        <div class="section-header">
+            <div class="section-number">04</div>
+            <div class="section-title-block">
+                <div class="eyebrow">Vozes do Setor · Maio 2026</div>
+                <h2>O que os <em>líderes</em><br>estão dizendo</h2>
+                <p class="lede">
+                    Declarações públicas que sustentam a tese de urgência. Use literalmente em reuniões C-level.
+                </p>
+            </div>
+        </div>
+        
+        <div class="quotes-grid">
+            <div class="quote-card">
+                <div class="quote-mark">"</div>
+                <div class="quote-text">
+                    Dentro de um contexto excepcional causado por questões geopolíticas, a Petrobras 
+                    oferece uma alternativa que contribui para a saúde financeira de seus clientes.
+                </div>
+                <div class="quote-author">Magda Chambriard</div>
+                <div class="quote-role">Presidente · Petrobras</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-mark">"</div>
+                <div class="quote-text">
+                    Em agosto a demanda por jet fuel é cerca de 40% maior que em março. 
+                    Se a oferta ficar onde está agora, o desafio pode ser ainda maior.
+                </div>
+                <div class="quote-author">Fatih Birol</div>
+                <div class="quote-role">Diretor Executivo · IEA</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-mark">"</div>
+                <div class="quote-text">
+                    QAV chegou a 45% dos custos operacionais das aéreas brasileiras em maio. 
+                    Defendemos isenção tributária semelhante à do diesel.
+                </div>
+                <div class="quote-author">Juliano Noman</div>
+                <div class="quote-role">Presidente · Abear</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-mark">"</div>
+                <div class="quote-text">
+                    Etihad oferece voos baratos da Europa para a Ásia em maio e junho apesar 
+                    dos preços do combustível terem dobrado, priorizando fluxo de caixa.
+                </div>
+                <div class="quote-author">Antonoaldo Neves</div>
+                <div class="quote-role">CEO · Etihad Airways (via AGBI)</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer id="cta">
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <img src="data:image/jpeg;base64,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" alt="TAT Operating">
+            <h3>TAT Operating</h3>
+            <p>
+                Consultoria especializada em otimização operacional para a indústria de aviação. 
+                Metodologia proprietária validada por equação de Breguet e tabelas oficiais IATA, 
+                Boeing e Airbus.
+            </p>
+        </div>
+        <div class="footer-col">
+            <h4>Material de Apoio</h4>
+            <ul>
+                <li>Simulador Excel TAT v3</li>
+                <li>Estudo GOL (v3, 18 seções)</li>
+                <li>Estudo Azul (v6)</li>
+                <li>Estudo TAP (v3, c/ Anexo 720)</li>
+                <li>Estudo Etihad (v1)</li>
+                <li>Speech Executivo CFO/CEO</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Fontes Primárias</h4>
+            <ul>
+                <li>IATA 2011 (p. 188–191)</li>
+                <li>Boeing AMM ATA 38</li>
+                <li>EIA Short-Term Energy Outlook</li>
+                <li>IEA Oil Market Report</li>
+                <li>IATA Jet Fuel Monitor</li>
+                <li>Petrobras · ADNOC OSP</li>
+                <li>Anexo 720 TAP (REV10)</li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div>TAT Operating © 2026 · Documento confidencial — uso interno</div>
+        <div class="right">DASHBOARD V3 · MAIO 2026</div>
+    </div>
+</footer>
+
+<script>
+// Dados de sensibilidade ano a ano
+const DATA = {
+    'GOL':    { vol: [1.55, 5.12, 5.48, 5.82, 6.15, 6.37], pct: [0.15, 0.35, 0.15, 0.15, 0.15, 0.15] },
+    'Azul':   { vol: [0.92, 2.75, 2.91, 3.07, 3.22, 3.38], pct: [0.15, 0.35, 0.15, 0.15, 0.15, 0.15] },
+    'TAP':    { vol: [0.49, 2.95, 3.10, 3.27, 3.42, 3.59], pct: [0.15, 0.35, 0.15, 0.15, 0.15, 0.15] },
+    'Etihad': { vol: [0.46, 6.90, 7.46, 8.05, 8.70, 9.39], pct: [0.20, 0.40, 0.20, 0.20, 0.20, 0.20] },
+};
+
+const SYM = { 'GOL': 'R$', 'Azul': 'R$', 'TAP': '€', 'Etihad': 'US$' };
+const ANOS = [2026, 2027, 2028, 2029, 2030, 2031];
+let currentDelta = 0.05;
+let currentSign = 1;
+
+function fmt(val, sym) {
+    const abs = Math.abs(val);
+    const sign = val < 0 ? '−' : '';
+    if (abs >= 1000000) return sign + sym + ' ' + (abs/1000000).toFixed(2) + ' MM';
+    if (abs >= 1000) return sign + sym + ' ' + Math.round(abs/1000).toLocaleString('pt-BR') + 'k';
+    return sign + sym + ' ' + Math.round(abs).toLocaleString('pt-BR');
+}
+
+function fmtN(val) {
+    const abs = Math.abs(val);
+    const sign = val < 0 ? '−' : '';
+    if (abs >= 1000000) return sign + (abs/1000000).toFixed(2) + ' MM';
+    if (abs >= 1000) return sign + Math.round(abs/1000).toLocaleString('pt-BR') + 'k';
+    return sign + Math.round(abs).toLocaleString('pt-BR');
+}
+
+function recalc() {
+    Object.keys(DATA).forEach(cia => {
+        const d = DATA[cia];
+        const sym = SYM[cia];
+        const tbody = document.getElementById('tbody-' + cia);
+        tbody.innerHTML = '';
+        
+        let totBruta = 0, totTat = 0, totLiq = 0, totVol = 0;
+        
+        for (let i = 0; i < 6; i++) {
+            const vol_ml = d.vol[i];
+            const pct = d.pct[i];
+            const bruta = currentSign * vol_ml * 1000000 * currentDelta;
+            const tat = bruta * pct;
+            const liq = bruta - tat;
+            
+            totBruta += bruta;
+            totTat += tat;
+            totLiq += liq;
+            totVol += vol_ml;
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${ANOS[i]}</td>
+                <td>${vol_ml.toFixed(2)}</td>
+                <td>${fmtN(bruta)}</td>
+                <td>${fmtN(tat)}</td>
+                <td class="net-col">${fmtN(liq)}</td>
+            `;
+            tbody.appendChild(row);
+        }
+        
+        const totalRow = document.createElement('tr');
+        totalRow.innerHTML = `
+            <td>TOTAL 6Y</td>
+            <td>${totVol.toFixed(2)}</td>
+            <td>${fmtN(totBruta)}</td>
+            <td>${fmtN(totTat)}</td>
+            <td class="net-col">${fmtN(totLiq)}</td>
+        `;
+        tbody.appendChild(totalRow);
+    });
+}
+
+document.getElementById('deltaInput').addEventListener('input', (e) => {
+    currentDelta = parseFloat(e.target.value) || 0;
+    document.getElementById('deltaSlider').value = currentDelta;
+    recalc();
+});
+
+document.getElementById('deltaSlider').addEventListener('input', (e) => {
+    currentDelta = parseFloat(e.target.value);
+    document.getElementById('deltaInput').value = currentDelta.toFixed(2);
+    recalc();
+});
+
+document.querySelectorAll('.sign-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        document.querySelectorAll('.sign-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentSign = e.target.dataset.sign === '+' ? 1 : -1;
+        recalc();
+    });
+});
+
+recalc();
+
+
+// ============ PAINEL DE CONTROLE ============
+const controlPanel = document.getElementById('controlPanel');
+const controlToggle = document.getElementById('controlToggle');
+const controlClose = document.getElementById('controlClose');
+
+let panelOpen = true;
+
+function setPanelState(open) {
+    panelOpen = open;
+    if (open) {
+        controlPanel.classList.remove('collapsed');
+        controlToggle.classList.remove('show');
+    } else {
+        controlPanel.classList.add('collapsed');
+        controlToggle.classList.add('show');
+    }
+}
+
+controlClose.addEventListener('click', () => setPanelState(false));
+controlToggle.addEventListener('click', () => setPanelState(true));
+
+// Estado inicial: começa aberto, mas após 4 segundos colapsa automaticamente
+setTimeout(() => {
+    if (panelOpen) setPanelState(false);
+}, 4000);
+
+// ---- Filtros de Companhia ----
+const airlineFilters = document.querySelectorAll('#airlineFilters .filter-pill');
+const airlineCards = document.querySelectorAll('.airline-card[data-airline]');
+const sensCards = document.querySelectorAll('.sens-card[data-cia]');
+const airlinesGrid = document.querySelector('.airlines-grid');
+const sensitivityGrid = document.querySelector('.sensitivity-grid');
+
+let activeAirlines = new Set(['GOL', 'Azul', 'TAP', 'Etihad']);
+
+function applyAirlineFilter() {
+    airlineCards.forEach(card => {
+        const name = card.dataset.airline;
+        if (activeAirlines.has(name)) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+    sensCards.forEach(card => {
+        const name = card.dataset.cia;
+        if (activeAirlines.has(name)) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+    
+    // Se só 1 cia ativa, expande as colunas
+    if (activeAirlines.size === 1) {
+        if (airlinesGrid) airlinesGrid.classList.add('single-col');
+        if (sensitivityGrid) sensitivityGrid.classList.add('single-col');
+    } else {
+        if (airlinesGrid) airlinesGrid.classList.remove('single-col');
+        if (sensitivityGrid) sensitivityGrid.classList.remove('single-col');
+    }
+    
+    // Atualiza estado do botão "Todas"
+    const allBtn = document.querySelector('[data-airline="all"]');
+    if (activeAirlines.size === 4) {
+        allBtn.classList.add('active');
+    } else {
+        allBtn.classList.remove('active');
+    }
+}
+
+airlineFilters.forEach(pill => {
+    pill.addEventListener('click', () => {
+        const target = pill.dataset.airline;
+        
+        if (target === 'all') {
+            // Toggle: se todas ativas, desliga todas. Senão, liga todas.
+            if (activeAirlines.size === 4) {
+                activeAirlines.clear();
+                document.querySelectorAll('#airlineFilters .filter-pill[data-airline]:not([data-airline="all"])').forEach(p => {
+                    p.classList.remove('active');
+                });
+                pill.classList.remove('active');
+            } else {
+                activeAirlines = new Set(['GOL', 'Azul', 'TAP', 'Etihad']);
+                document.querySelectorAll('#airlineFilters .filter-pill').forEach(p => {
+                    p.classList.add('active');
+                });
+            }
+        } else {
+            if (activeAirlines.has(target)) {
+                activeAirlines.delete(target);
+                pill.classList.remove('active');
+            } else {
+                activeAirlines.add(target);
+                pill.classList.add('active');
+            }
+        }
+        
+        applyAirlineFilter();
+    });
+});
+
+// ---- Toggle de Seções ----
+const sectionToggles = document.querySelectorAll('.section-toggle');
+
+sectionToggles.forEach(toggle => {
+    toggle.addEventListener('click', () => {
+        const sectionName = toggle.dataset.section;
+        const sw = toggle.querySelector('.switch');
+        const isOn = sw.classList.contains('on');
+        const targetSection = document.querySelector(`[data-section-name="${sectionName}"]`);
+        
+        if (isOn) {
+            sw.classList.remove('on');
+            if (targetSection) targetSection.classList.add('hidden');
+        } else {
+            sw.classList.add('on');
+            if (targetSection) targetSection.classList.remove('hidden');
+        }
+    });
+});
+
+// ---- Modos Pre-definidos ----
+const modeButtons = document.querySelectorAll('.mode-btn[data-mode]');
+
+const MODES = {
+    full: {
+        sections: ['airlines', 'market', 'sensitivity', 'quotes'],
+        printMode: false
+    },
+    compact: {
+        sections: ['airlines', 'market', 'sensitivity'],
+        printMode: false
+    },
+    financial: {
+        sections: ['airlines', 'sensitivity'],
+        printMode: false
+    },
+    print: {
+        sections: ['airlines', 'market', 'sensitivity', 'quotes'],
+        printMode: true
+    }
+};
+
+function applyMode(modeName) {
+    const mode = MODES[modeName];
+    if (!mode) return;
+    
+    // Resetar toggles
+    sectionToggles.forEach(toggle => {
+        const sectionName = toggle.dataset.section;
+        const sw = toggle.querySelector('.switch');
+        const targetSection = document.querySelector(`[data-section-name="${sectionName}"]`);
+        
+        if (mode.sections.includes(sectionName)) {
+            sw.classList.add('on');
+            if (targetSection) targetSection.classList.remove('hidden');
+        } else {
+            sw.classList.remove('on');
+            if (targetSection) targetSection.classList.add('hidden');
+        }
+    });
+    
+    // Print mode
+    if (mode.printMode) {
+        document.body.classList.add('print-mode');
+    } else {
+        document.body.classList.remove('print-mode');
+    }
+    
+    // Atualizar botões
+    modeButtons.forEach(b => b.classList.remove('active'));
+    document.querySelector(`[data-mode="${modeName}"]`).classList.add('active');
+}
+
+modeButtons.forEach(btn => {
+    btn.addEventListener('click', () => applyMode(btn.dataset.mode));
+});
+
+// ---- Print Button ----
+document.getElementById('printBtn').addEventListener('click', () => {
+    window.print();
+});
+
+// Atalho de teclado: P para print, F para toggle painel
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'p' && (e.ctrlKey || e.metaKey)) return; // não interferir com Ctrl+P
+    if (e.target.tagName === 'INPUT') return;
+    
+    if (e.key === 'f' || e.key === 'F') {
+        setPanelState(!panelOpen);
+    }
+});
+
+
+
+
+// ============ FILTRO POR ANO (DESTAQUE) ============
+let currentYear = 'all';
+const yearPills = document.querySelectorAll('#yearFilters .year-pill');
+
+function applyYearHighlight() {
+    document.querySelectorAll('.sens-table tbody tr').forEach(row => {
+        const yearCell = row.cells[0];
+        if (!yearCell) return;
+        const yearText = yearCell.textContent.trim();
+        
+        if (currentYear === 'all') {
+            row.style.opacity = '1';
+            row.style.background = '';
+        } else {
+            if (yearText === currentYear) {
+                row.style.opacity = '1';
+                row.style.background = 'rgba(201, 169, 97, 0.12)';
+            } else if (yearText === 'TOTAL 6Y') {
+                row.style.opacity = '0.85';
+                row.style.background = '';
+            } else {
+                row.style.opacity = '0.30';
+                row.style.background = '';
+            }
+        }
+    });
+}
+
+yearPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+        yearPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        currentYear = pill.dataset.year;
+        applyYearHighlight();
+    });
+});
+
+// Re-aplicar destaque depois que a tabela é recalculada
+const originalRecalc = recalc;
+recalc = function() {
+    originalRecalc();
+    applyYearHighlight();
+};
+recalc(); // re-run com nova função
+
+// ============ SELETOR DE MOEDA ============
+const FX = {
+    'USD_BRL': 5.20,
+    'USD_EUR': 0.93,
+    'BRL_USD': 1 / 5.20,
+    'BRL_EUR': 0.93 / 5.20,
+    'EUR_USD': 1 / 0.93,
+    'EUR_BRL': 5.20 / 0.93
+};
+
+// Original native data
+const NATIVE_DATA = {
+    'GOL':    { bruta: 180.14, tat: 34.68, liq: 146.67, sym: 'R$', code: 'BRL' },
+    'Azul':   { bruta: 96.81,  tat: 18.73, liq: 78.98,  sym: 'R$', code: 'BRL' },
+    'TAP':    { bruta: 17.89,  tat: 3.56,  liq: 14.25,  sym: '€',  code: 'EUR' },
+    'Etihad': { bruta: 35.98,  tat: 8.71,  liq: 27.47,  sym: 'US$',code: 'USD' }
+};
+
+let currentCurrency = 'native';
+
+function convert(value, fromCode, toCode) {
+    if (fromCode === toCode) return value;
+    const key = fromCode + '_' + toCode;
+    if (FX[key]) return value * FX[key];
+    // Conversão via USD
+    if (fromCode !== 'USD' && toCode !== 'USD') {
+        const inUSD = value * FX[fromCode + '_USD'];
+        return inUSD * FX['USD_' + toCode];
+    }
+    return value;
+}
+
+function applyCurrency() {
+    // Atualizar cards das cias na seção 01
+    const symMap = { 'USD': 'US$', 'BRL': 'R$', 'EUR': '€' };
+    
+    Object.keys(NATIVE_DATA).forEach(cia => {
+        const native = NATIVE_DATA[cia];
+        const card = document.querySelector(`.airline-card[data-airline="${cia}"]`);
+        if (!card) return;
+        
+        let bruta, tat, liq, displaySym;
+        
+        if (currentCurrency === 'native') {
+            bruta = native.bruta;
+            tat = native.tat;
+            liq = native.liq;
+            displaySym = native.sym;
+        } else {
+            bruta = convert(native.bruta, native.code, currentCurrency);
+            tat = convert(native.tat, native.code, currentCurrency);
+            liq = convert(native.liq, native.code, currentCurrency);
+            displaySym = symMap[currentCurrency];
+        }
+        
+        const heroNum = card.querySelector('.airline-hero-number');
+        const heroCur = card.querySelector('.airline-hero-currency');
+        const metricVals = card.querySelectorAll('.airline-metric .val');
+        
+        if (heroNum) heroNum.innerHTML = `${displaySym} ${bruta.toFixed(2)} MM`;
+        if (heroCur) {
+            const isConverted = currentCurrency !== 'native' && currentCurrency !== native.code;
+            heroCur.innerHTML = isConverted 
+                ? `Economia Bruta 6Y <span class="currency-converted-badge">CONVERTIDO</span>`
+                : (cia === 'TAP' ? 'Economia Bruta 6Y · Inclui EU ETS' : 'Economia Bruta 6Y');
+        }
+        if (metricVals[0]) metricVals[0].innerHTML = `${displaySym} ${tat.toFixed(2)}<small> MM</small>`;
+        if (metricVals[1]) metricVals[1].innerHTML = `${displaySym} ${liq.toFixed(2)}<small> MM</small>`;
+    });
+    
+    // Atualizar consolidado no hero
+    const breakdowns = document.querySelectorAll('.breakdown-row .val');
+    if (breakdowns.length === 4 && currentCurrency !== 'native') {
+        const ciasOrder = ['GOL', 'Azul', 'TAP', 'Etihad'];
+        const symbol = symMap[currentCurrency];
+        ciasOrder.forEach((cia, i) => {
+            const native = NATIVE_DATA[cia];
+            const val = convert(native.bruta, native.code, currentCurrency);
+            breakdowns[i].textContent = `${symbol} ${val.toFixed(2)} MM`;
+        });
+        
+        // Total consolidado
+        let total = 0;
+        ciasOrder.forEach(cia => {
+            total += convert(NATIVE_DATA[cia].bruta, NATIVE_DATA[cia].code, currentCurrency);
+        });
+        const consolidated = document.querySelector('.consolidated-total');
+        const consolidatedCur = document.querySelector('.consolidated-currency');
+        if (consolidated) consolidated.textContent = `${symbol} ${total.toFixed(1)} MM`;
+        if (consolidatedCur) consolidatedCur.textContent = `Total em ${currentCurrency} · Taxas Mai/2026`;
+    } else if (currentCurrency === 'native') {
+        // Restaurar valores nativos
+        const breakdownVals = ['R$ 180,14 MM', 'R$ 96,81 MM', '€ 17,89 MM', 'US$ 35,98 MM'];
+        document.querySelectorAll('.breakdown-row .val').forEach((el, i) => {
+            if (breakdownVals[i]) el.textContent = breakdownVals[i];
+        });
+        const consolidated = document.querySelector('.consolidated-total');
+        const consolidatedCur = document.querySelector('.consolidated-currency');
+        if (consolidated) consolidated.textContent = '≈ US$ 103,5 MM';
+        if (consolidatedCur) consolidatedCur.textContent = 'Equivalente em USD · Taxas Mai/2026';
+    }
+}
+
+document.querySelectorAll('.currency-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.currency-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCurrency = btn.dataset.currency;
+        applyCurrency();
+    });
+});
+
+// ============ MODO SLIDE (1 CIA POR TELA) ============
+const SLIDE_DATA = [
+    { 
+        name: 'GOL', 
+        tagline: 'Linhas Aéreas · Brasil · BRL',
+        hero: 'R$ 180,14 MM',
+        currency: 'Economia Bruta Acumulada · 2026–2031',
+        tatFee: 'R$ 34,68 MM',
+        tatPct: '19,2% da bruta',
+        ciaLiq: 'R$ 146,67 MM',
+        frota: '140',
+        co2: '76 kt'
+    },
+    { 
+        name: 'Azul', 
+        tagline: 'Linhas Aéreas · Brasil · BRL',
+        hero: 'R$ 96,81 MM',
+        currency: 'Economia Bruta Acumulada · 2026–2031',
+        tatFee: 'R$ 18,73 MM',
+        tatPct: '19,3% da bruta',
+        ciaLiq: 'R$ 78,98 MM',
+        frota: '160',
+        co2: '41 kt'
+    },
+    { 
+        name: 'TAP', 
+        tagline: 'Air Portugal · UE · EUR',
+        hero: '€ 17,89 MM',
+        currency: 'Economia Bruta 6Y · Inclui EU ETS shadow',
+        tatFee: '€ 3,56 MM',
+        tatPct: '19,9% da bruta',
+        ciaLiq: '€ 14,25 MM',
+        frota: '99',
+        co2: '45 kt'
+    },
+    { 
+        name: 'Etihad', 
+        tagline: 'Airways · UAE · USD',
+        hero: 'US$ 35,98 MM',
+        currency: 'Economia Bruta Acumulada · 2026–2031',
+        tatFee: 'US$ 8,71 MM',
+        tatPct: '24,2% da bruta',
+        ciaLiq: 'US$ 27,47 MM',
+        frota: '128',
+        co2: '131 kt'
+    }
+];
+
+let currentSlide = 0;
+
+function renderSlide(idx) {
+    const data = SLIDE_DATA[idx];
+    document.getElementById('slideAirlineName').textContent = data.name;
+    document.getElementById('slideAirlineTagline').textContent = data.tagline;
+    document.getElementById('slideHeroNumber').textContent = data.hero;
+    document.getElementById('slideHeroCurrency').textContent = data.currency;
+    document.getElementById('slideTatFee').textContent = data.tatFee;
+    document.getElementById('slideTatPct').textContent = data.tatPct;
+    document.getElementById('slideCiaLiq').textContent = data.ciaLiq;
+    document.getElementById('slideFrota').textContent = data.frota;
+    document.getElementById('slideCO2').textContent = data.co2;
+    document.getElementById('slideCounter').textContent = String(idx + 1).padStart(2, '0') + ' / 04';
+    
+    // Logo brand - usa a logo do topo
+    const topLogo = document.querySelector('.topbar-logo');
+    const slideLogo = document.getElementById('slideBrandLogo');
+    if (topLogo && slideLogo && topLogo.src) {
+        slideLogo.src = topLogo.src;
+    }
+    
+    // Dots
+    document.querySelectorAll('.slide-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === idx);
+    });
+}
+
+function enterSlideMode() {
+    document.body.classList.add('slide-mode');
+    currentSlide = 0;
+    renderSlide(0);
+    setPanelState(false);
+}
+
+function exitSlideMode() {
+    document.body.classList.remove('slide-mode');
+}
+
+document.getElementById('slideModeBtn').addEventListener('click', enterSlideMode);
+document.getElementById('slideExit').addEventListener('click', exitSlideMode);
+
+document.getElementById('slideNext').addEventListener('click', () => {
+    currentSlide = (currentSlide + 1) % SLIDE_DATA.length;
+    renderSlide(currentSlide);
+});
+
+document.getElementById('slidePrev').addEventListener('click', () => {
+    currentSlide = (currentSlide - 1 + SLIDE_DATA.length) % SLIDE_DATA.length;
+    renderSlide(currentSlide);
+});
+
+document.querySelectorAll('.slide-dot').forEach(dot => {
+    dot.addEventListener('click', () => {
+        currentSlide = parseInt(dot.dataset.idx);
+        renderSlide(currentSlide);
+    });
+});
+
+// Navegação por teclado no modo slide
+document.addEventListener('keydown', (e) => {
+    if (!document.body.classList.contains('slide-mode')) return;
+    
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        currentSlide = (currentSlide + 1) % SLIDE_DATA.length;
+        renderSlide(currentSlide);
+    } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        currentSlide = (currentSlide - 1 + SLIDE_DATA.length) % SLIDE_DATA.length;
+        renderSlide(currentSlide);
+    } else if (e.key === 'Escape') {
+        exitSlideMode();
+    } else if (e.key >= '1' && e.key <= '4') {
+        currentSlide = parseInt(e.key) - 1;
+        renderSlide(currentSlide);
+    }
+});
+
+
+</script>
+
+
+<!-- ============ MODO SLIDE (1 cia por tela) ============ -->
+<div id="slide-stage">
+    <button class="slide-exit" id="slideExit">✕  SAIR (ESC)</button>
+    
+    <div class="slide-content">
+        <div class="slide-header">
+            <div class="slide-brand">
+                <img id="slideBrandLogo" src="" alt="TAT">
+                <div class="slide-brand-text">
+                    <div class="name">TAT Operating</div>
+                    <div class="tagline">Aviation Performance</div>
+                </div>
+            </div>
+            <div class="slide-counter" id="slideCounter">01 / 04</div>
+        </div>
+        
+        <div class="slide-airline-name" id="slideAirlineName">GOL</div>
+        <div class="slide-airline-tagline" id="slideAirlineTagline">Linhas Aéreas · BR · BRL</div>
+        
+        <div class="slide-hero-number" id="slideHeroNumber">R$ 180,14 MM</div>
+        <div class="slide-hero-currency" id="slideHeroCurrency">Economia Bruta Acumulada · 2026–2031</div>
+        
+        <div class="slide-metrics">
+            <div class="slide-metric">
+                <div class="lbl">TAT Fee</div>
+                <div class="val" id="slideTatFee">R$ 34,68 MM</div>
+                <div class="sub" id="slideTatPct">19,2% da bruta</div>
+            </div>
+            <div class="slide-metric">
+                <div class="lbl">Cia Líquido</div>
+                <div class="val" id="slideCiaLiq">R$ 146,67 MM</div>
+                <div class="sub" id="slideCiaSub">após TAT fee</div>
+            </div>
+            <div class="slide-metric">
+                <div class="lbl">Frota</div>
+                <div class="val" id="slideFrota">140</div>
+                <div class="sub">aeronaves</div>
+            </div>
+            <div class="slide-metric">
+                <div class="lbl">CO₂ Evitado</div>
+                <div class="val" id="slideCO2">76 kt</div>
+                <div class="sub">6 anos</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slide-nav">
+        <button class="slide-nav-btn" id="slidePrev">◀</button>
+        <div class="slide-nav-dots" id="slideDots">
+            <div class="slide-dot active" data-idx="0"></div>
+            <div class="slide-dot" data-idx="1"></div>
+            <div class="slide-dot" data-idx="2"></div>
+            <div class="slide-dot" data-idx="3"></div>
+        </div>
+        <button class="slide-nav-btn" id="slideNext">▶</button>
+    </div>
+</div>
+
+</body>
+</html>
