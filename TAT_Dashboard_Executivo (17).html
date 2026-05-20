@@ -1,0 +1,3268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAT Operating</title>
+<meta name="description" content="TAT Operating">
+<meta name="robots" content="noindex,nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+
+/* =====================================================================
+   MEMO McKINSEY · TAT OPERATING · v6
+   ===================================================================== */
+:root {
+    /* PALETA CLARA · papel editorial FT/HBR/WSJ */
+    --bg:           #F8F4EC;   /* creme principal (paper) */
+    --bg-2:         #F2EDDF;   /* creme acentuado para cards/blocos */
+    --bg-3:         #EAE3D0;   /* creme escuro para hover */
+    --ink:          #0A1628;   /* navy quase preto · texto principal */
+    --ink-2:        #1A2E4E;   /* navy intermediário · subtitle */
+    --ink-3:        #3A4A66;   /* navy mais claro · body */
+    --mute:         #6B7A92;   /* cinza navy · captions */
+    --mute-2:       #94A0B6;   /* cinza navy claro · metadata */
+    --gold:         #8A6F3E;   /* dourado escuro sobre creme */
+    --gold-2:       #6B5530;   /* dourado profundo · hover/active */
+    --gold-soft:    rgba(138,111,62,0.10);
+    --green:        #2D6E4A;   /* verde editorial sobre creme */
+    --red:          #8B3A3A;   /* vermelho editorial sobre creme */
+    --line:         rgba(10,22,40,0.10);     /* linha sutil sobre creme */
+    --line-strong:  rgba(10,22,40,0.20);
+    --line-gold:    rgba(138,111,62,0.40);
+    /* Aliases para compatibilidade com nome antigo */
+    --navy:         #F8F4EC;
+    --navy-2:       #F2EDDF;
+    --navy-3:       #EAE3D0;
+    --cream:        #0A1628;
+    --cream-2:      #1A2E4E;
+    --cream-3:      #3A4A66;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+::selection { background: var(--gold); color: var(--navy); }
+
+/* =====================================================================
+   RAIL SUPERIOR
+   ===================================================================== */
+.rail {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 72px;
+    background: rgba(248,244,236,0.96);
+    box-shadow: 0 1px 0 var(--line), 0 4px 24px rgba(10,22,40,0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    padding: 0 28px;
+    z-index: 100;
+}
+
+.rail-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-right: 22px;
+    border-right: 1px solid var(--line);
+    height: 100%;
+}
+.rail-brand-logo { width: 28px; height: 28px; border-radius: 3px; }
+.rail-brand-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px; font-weight: 600;
+    color: var(--ink); letter-spacing: 0.005em;
+}
+
+.rail-filter {
+    display: flex; align-items: center;
+    padding: 0 22px;
+    border-right: 1px solid var(--line);
+    height: 100%;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: relative;
+}
+.rail-filter:hover { background: rgba(244,238,220,0.03); }
+.rail-filter.active-filter { background: var(--gold-soft); }
+.rail-filter-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-right: 12px;
+}
+.rail-filter-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px; color: var(--ink);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    font-weight: 500;
+}
+.rail-filter.active-filter .rail-filter-value { color: var(--gold-2); }
+.rail-filter::after {
+    content: '';
+    position: absolute;
+    right: 8px; top: 50%;
+    width: 5px; height: 5px;
+    border-right: 1.2px solid var(--mute);
+    border-bottom: 1.2px solid var(--mute);
+    transform: translateY(-70%) rotate(45deg);
+    transition: transform 0.2s ease;
+}
+.rail-filter.open::after {
+    transform: translateY(-30%) rotate(-135deg);
+    border-color: var(--gold);
+}
+
+/* "+ Filtros" button */
+.rail-more {
+    display: flex; align-items: center;
+    padding: 0 18px;
+    height: 100%;
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: relative;
+    background: transparent;
+    border-top: none; border-bottom: none; border-left: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold-2);
+}
+.rail-more:hover { background: var(--gold-soft); }
+.rail-more.active { background: var(--gold-soft); color: var(--gold); }
+.rail-more .count {
+    margin-left: 8px;
+    padding: 2px 7px;
+    background: var(--gold);
+    color: var(--navy);
+    border-radius: 10px;
+    font-size: 9px;
+    font-weight: 600;
+}
+.rail-more .count.zero { display: none; }
+
+.rail-reset {
+    margin-left: auto;
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--mute);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-right: 18px;
+}
+.rail-reset:hover { border-color: var(--gold); color: var(--gold); }
+.rail-reset.hidden { display: none; }
+
+.rail-progress {
+    display: flex; align-items: center;
+    gap: 14px;
+    padding-left: 22px;
+    border-left: 1px solid var(--line);
+    height: 100%;
+    padding-right: 0;
+}
+.rail-progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--mute);
+    min-width: 26px;
+    text-align: right;
+}
+.rail-progress-dots { display: flex; gap: 8px; }
+.rail-progress-dot {
+    width: 28px; height: 3px;
+    background: var(--line-strong);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.rail-progress-dot.active { background: var(--gold); }
+.rail-progress-dot:hover { background: var(--cream-3); }
+
+/* Rail dropdown menu */
+.rail-menu {
+    position: absolute;
+    top: 72px;
+    background: var(--bg);
+    border: 1px solid var(--line-strong);
+    left: 0;
+    min-width: 240px;
+    background: var(--navy-2);
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.50);
+    display: none;
+    z-index: 200;
+}
+.rail-menu.open { display: block; }
+.rail-menu-item {
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s ease;
+}
+.rail-menu-item:last-child { border-bottom: none; }
+.rail-menu-item:hover { background: rgba(244,238,220,0.04); }
+.rail-menu-item-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cream);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+}
+.rail-menu-item-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--mute);
+    letter-spacing: 0.06em;
+}
+.rail-menu-item.active .rail-menu-item-label { color: var(--gold-2); }
+.rail-menu-item.active::before {
+    content: '';
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+/* =====================================================================
+   PAINEL "+ FILTROS" (drawer abaixo do rail)
+   ===================================================================== */
+.more-panel {
+    position: fixed;
+    top: 72px;
+    left: 0; right: 0;
+    background: var(--navy-2);
+    border-bottom: 1px solid var(--line-gold);
+    z-index: 90;
+    padding: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.more-panel.open {
+    max-height: 280px;
+    border-bottom-color: var(--line-gold);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.40);
+}
+.more-panel-inner {
+    padding: 28px 36px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 28px;
+}
+.filter-group {
+    border-left: 1px solid var(--line);
+    padding-left: 22px;
+}
+.filter-group:first-child { border-left: none; padding-left: 0; }
+.filter-group-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.20em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+.filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.filter-pill {
+    padding: 8px 12px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--cream-2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.18s ease;
+}
+.filter-pill:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+.filter-pill.active {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold-2);
+}
+
+/* =====================================================================
+   WELCOME SCREEN
+   ===================================================================== */
+.welcome {
+    position: fixed;
+    inset: 72px 0 0 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+    background: var(--navy);
+}
+body.no-cia .welcome { display: flex; }
+body.no-cia .deck { display: none; }
+body.no-cia .more-panel { display: none; }
+body.no-cia .rail-progress { visibility: hidden; }
+
+.welcome-inner {
+    max-width: 920px;
+    width: 100%;
+    padding: 0 48px;
+    text-align: center;
+}
+.welcome-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+}
+.welcome-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 60px;
+    font-weight: 500;
+    line-height: 1.05;
+    color: var(--cream);
+    margin-bottom: 28px;
+    letter-spacing: -0.02em;
+}
+.welcome-title em {
+    font-style: italic;
+    color: var(--gold);
+}
+.welcome-sub {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--mute);
+    max-width: 640px;
+    margin: 0 auto 56px;
+}
+.welcome-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+.welcome-card {
+    border: 1px solid var(--line-strong);
+    padding: 28px 22px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    background: var(--navy);
+}
+.welcome-card:hover {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    transform: translateY(-2px);
+}
+.welcome-card-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--cream);
+    margin-bottom: 6px;
+}
+.welcome-card-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+}
+.welcome-card-net-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--mute);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+.welcome-card-net-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--gold-2);
+    font-weight: 500;
+}
+
+/* =====================================================================
+   DECK · SLIDES
+   ===================================================================== */
+.deck {
+    margin-top: 72px;
+    min-height: calc(100vh - 72px);
+    position: relative;
+    transition: padding-top 0.35s ease;
+}
+body.more-open .deck { padding-top: 280px; }
+
+.slide {
+    display: none;
+    padding: 60px 80px 100px;
+    animation: slideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.slide.active { display: block; }
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.slide-inner {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.slide-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 48px;
+}
+.slide-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--gold);
+    text-transform: uppercase;
+}
+.slide-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--mute);
+    text-transform: uppercase;
+}
+
+.slide-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 84px;
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    margin-bottom: 32px;
+    max-width: 1100px;
+}
+.slide-title em {
+    font-style: italic;
+    color: var(--gold);
+}
+
+.slide-lede {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 22px;
+    line-height: 1.55;
+    color: var(--cream-2);
+    margin-bottom: 56px;
+    max-width: 880px;
+    font-weight: 400;
+}
+
+/* =====================================================================
+   FOCO DE BLOCO (atenuação)
+   ===================================================================== */
+body[data-focus] [data-block]:not([data-block="anchor"]) {
+    opacity: 0.32;
+    filter: saturate(0.4);
+    transition: opacity 0.35s, filter 0.35s;
+}
+body[data-focus="situation"] [data-block="situation-anchor"],
+body[data-focus="situation"] [data-block="situation-side"],
+body[data-focus="situation"] [data-block="situation-evidence"],
+body[data-focus="complication"] [data-block="complication-grid"],
+body[data-focus="complication"] [data-block="complication-voice"],
+body[data-focus="resolution"] [data-block="resolution-anchor"],
+body[data-focus="resolution"] [data-block="resolution-audit"],
+body[data-focus="resolution"] [data-block="resolution-phases"],
+body[data-focus="resolution"] [data-block="resolution-cta"],
+body[data-focus="ebit"] [data-block="ebit"],
+body[data-focus="roadmap"] [data-block="resolution-phases"],
+body[data-focus="risk"] [data-block="complication-grid"] {
+    opacity: 1 !important;
+    filter: none !important;
+}
+body[data-focus] [data-block]:not([data-block="anchor"]):hover {
+    opacity: 0.85;
+    filter: none;
+}
+
+/* =====================================================================
+   VISÃO ANALÍTICA
+   ===================================================================== */
+body[data-view="summary"] [data-detail-only] { display: none; }
+body[data-view="technical"] [data-fin-only] { display: none; }
+body[data-view="financial"] [data-tech-only] { display: none; }
+
+/* =====================================================================
+   SLIDE 1 · SITUAÇÃO
+   ===================================================================== */
+.situation-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 64px;
+}
+
+.anchor-number {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 168px;
+    font-weight: 500;
+    line-height: 0.88;
+    letter-spacing: -0.025em;
+    color: var(--cream);
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+    display: inline-block;
+}
+.anchor-number:hover { color: var(--gold); }
+.anchor-number .ccy {
+    font-size: 64px; color: var(--mute);
+    font-weight: 400; margin-right: 16px;
+    vertical-align: top; line-height: 1;
+    position: relative; top: 22px;
+}
+.anchor-number .unit {
+    font-size: 48px; color: var(--mute);
+    font-weight: 400; margin-left: 12px;
+}
+.anchor-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 12px;
+}
+.anchor-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    color: var(--mute-2);
+    text-transform: uppercase;
+}
+
+.sidebar-stack {
+    border-left: 1px solid var(--line);
+    padding-left: 36px;
+}
+.sidebar-row {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    cursor: pointer;
+    transition: padding-left 0.2s ease;
+}
+.sidebar-row:hover { padding-left: 8px; }
+.sidebar-row:last-child { border-bottom: none; }
+.sidebar-row-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+}
+.sidebar-row-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--cream);
+}
+.sidebar-row-value.pos { color: var(--green); }
+.sidebar-row-value.warn { color: var(--red); }
+.sidebar-row-value.gold { color: var(--gold-2); }
+
+.evidence-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    margin-top: 56px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line);
+}
+.evidence-card {
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+    padding: 24px 28px;
+    border: 1px solid var(--line);
+}
+.evidence-card:hover { border-color: var(--gold); }
+.evidence-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+}
+.evidence-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 8px;
+}
+.evidence-headline.warn { color: var(--red); }
+.evidence-sub {
+    font-size: 12.5px;
+    color: var(--mute);
+    line-height: 1.55;
+}
+
+/* =====================================================================
+   SLIDE 2 · COMPLICAÇÃO
+   ===================================================================== */
+.compl-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-bottom: 64px;
+    border: 1px solid var(--line);
+}
+.compl-cell {
+    padding: 36px 36px 32px;
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+.compl-cell:last-child { border-right: none; }
+.compl-cell:hover { background: rgba(176,88,88,0.04); }
+.compl-cell-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--red);
+    margin-bottom: 18px;
+}
+.compl-cell-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 14px;
+}
+.compl-cell-evidence {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    font-style: italic;
+    color: var(--cream-2);
+    line-height: 1.55;
+    margin-bottom: 22px;
+}
+.compl-cell-data {
+    padding-top: 22px;
+    border-top: 1px solid var(--line);
+}
+.compl-cell-data-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 6px;
+}
+.compl-cell-data-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--mute);
+    text-transform: uppercase;
+}
+
+.voice-block {
+    background: var(--navy-2);
+    padding: 56px 64px 48px;
+    margin-top: 32px;
+    border-left: 2px solid var(--gold);
+    position: relative;
+    cursor: pointer;
+}
+.voice-block::before {
+    content: '"';
+    position: absolute;
+    top: 12px;
+    left: 32px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 100px;
+    color: var(--gold);
+    line-height: 1;
+    opacity: 0.4;
+}
+.voice-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 26px;
+    line-height: 1.45;
+    color: var(--cream);
+    margin-bottom: 22px;
+    padding-left: 56px;
+}
+.voice-author {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding-left: 56px;
+    margin-bottom: 3px;
+}
+.voice-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    padding-left: 56px;
+}
+
+/* =====================================================================
+   SLIDE 3 · RESOLUÇÃO
+   ===================================================================== */
+.resolution-head {
+    display: grid;
+    grid-template-columns: 1fr 1.4fr;
+    gap: 80px;
+    align-items: end;
+    margin-bottom: 56px;
+}
+.resolution-anchor-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+}
+.resolution-anchor {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 152px;
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+    color: var(--green);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    display: inline-block;
+}
+.resolution-anchor:hover { opacity: 0.8; }
+.resolution-anchor .ccy {
+    font-size: 56px; color: var(--mute);
+    font-weight: 400; margin-right: 12px;
+    vertical-align: top; line-height: 1;
+    position: relative; top: 22px;
+}
+.resolution-anchor .unit {
+    font-size: 44px; color: var(--mute);
+    font-weight: 400; margin-left: 10px;
+}
+.resolution-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 24px;
+    line-height: 1.5;
+    color: var(--cream-2);
+}
+.resolution-tagline em {
+    color: var(--gold);
+    font-weight: 500;
+    font-style: normal;
+}
+
+.audit-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    margin-bottom: 56px;
+    padding: 32px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+}
+.audit-item {
+    cursor: pointer;
+    transition: padding-left 0.2s ease;
+}
+.audit-item:hover { padding-left: 6px; }
+.audit-item-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--mute);
+    margin-bottom: 10px;
+}
+.audit-item-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 4px;
+}
+.audit-item-value .ccy {
+    font-size: 18px; color: var(--mute);
+    font-weight: 400; margin-right: 4px;
+}
+.audit-item-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute-2);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+}
+
+/* EBIT mini-section (slide 3) */
+.ebit-mini {
+    margin: 56px 0;
+    padding: 36px 40px;
+    background: var(--navy-2);
+    border-left: 2px solid var(--gold);
+}
+.ebit-mini-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+.ebit-mini-row {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 40px;
+    align-items: baseline;
+}
+.ebit-mini-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--cream);
+    line-height: 1.2;
+    font-weight: 500;
+}
+.ebit-mini-title em {
+    color: var(--gold);
+    font-style: italic;
+}
+.ebit-mini-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    color: var(--cream);
+    line-height: 1;
+}
+.ebit-mini-val .small {
+    font-size: 18px; color: var(--mute);
+}
+.ebit-mini-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.phases-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 56px;
+}
+.phase-block {
+    padding: 28px 28px 32px;
+    border: 1px solid var(--line);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+.phase-block:hover { border-color: var(--gold); }
+.phase-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    margin-bottom: 10px;
+}
+.phase-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--cream);
+    line-height: 1.1;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+.phase-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--mute);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    padding-bottom: 18px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+}
+.phase-capture {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--cream);
+    margin-bottom: 4px;
+}
+.phase-capture-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--mute);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.cta-block {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 56px;
+    padding-top: 48px;
+    border-top: 1px solid var(--line);
+    margin-top: 32px;
+}
+.cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 40px;
+    font-weight: 500;
+    line-height: 1.1;
+    color: var(--cream);
+    margin-bottom: 22px;
+}
+.cta-title em {
+    color: var(--gold);
+    font-style: italic;
+}
+.cta-steps {
+    list-style: none;
+    padding: 0;
+}
+.cta-steps li {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16.5px;
+    color: var(--cream-2);
+}
+.cta-steps li:last-child { border-bottom: none; }
+.cta-steps .stepn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--gold);
+    min-width: 24px;
+    letter-spacing: 0.10em;
+}
+.cta-contact {
+    padding: 28px 32px;
+    background: var(--navy-2);
+    border: 1px solid var(--line);
+    align-self: start;
+}
+.cta-contact-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    margin-bottom: 14px;
+    text-transform: uppercase;
+}
+.cta-contact-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    color: var(--cream);
+    margin-bottom: 4px;
+    font-weight: 500;
+}
+.cta-contact-role {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--mute);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+.cta-contact-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--cream-2);
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+    letter-spacing: 0.04em;
+}
+
+/* =====================================================================
+   NAV ARROWS + HINTS
+   ===================================================================== */
+.nav-arrow {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 48px; height: 48px;
+    background: rgba(15,30,54,0.85);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--line-strong);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.nav-arrow:hover {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+}
+.nav-arrow.prev { left: 24px; }
+.nav-arrow.next { right: 24px; }
+.nav-arrow svg { width: 16px; height: 16px; stroke: var(--cream); stroke-width: 1.5; fill: none; }
+.nav-arrow:hover svg { stroke: var(--gold); }
+.nav-arrow.disabled { opacity: 0.25; pointer-events: none; }
+
+.hint-footer {
+    position: fixed;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    color: var(--mute-2);
+    text-transform: uppercase;
+    z-index: 50;
+    pointer-events: none;
+}
+.hint-footer .kbd {
+    border: 1px solid var(--line);
+    padding: 2px 6px;
+    color: var(--gold);
+    margin: 0 3px;
+}
+
+/* =====================================================================
+   AUDIT PANEL (drawer lateral)
+   ===================================================================== */
+.audit-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10,22,40,0.65);
+    backdrop-filter: blur(3px);
+    z-index: 500;
+    display: none;
+    animation: fadeIn 0.2s ease;
+}
+.audit-backdrop.visible { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.audit-panel {
+    position: fixed;
+    top: 0; right: 0; bottom: 0;
+    width: 520px;
+    max-width: 92vw;
+    background: var(--navy-2);
+    border-left: 1px solid var(--line-gold);
+    z-index: 600;
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    box-shadow: -24px 0 64px rgba(0,0,0,0.40);
+}
+.audit-panel.open { transform: translateX(0); }
+.audit-panel-header {
+    padding: 24px 32px 20px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+.audit-panel-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.audit-panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    color: var(--cream);
+    line-height: 1.2;
+    font-weight: 500;
+}
+.audit-panel-close {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--cream);
+    width: 30px; height: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-family: 'JetBrains Mono', monospace;
+    transition: all 0.2s ease;
+    line-height: 0;
+}
+.audit-panel-close:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+.audit-panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px;
+}
+.audit-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: var(--cream);
+    line-height: 1;
+    margin-bottom: 24px;
+    font-weight: 500;
+}
+.audit-section { margin-bottom: 28px; }
+.audit-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+}
+.audit-formula {
+    background: var(--navy);
+    border-left: 2px solid var(--gold);
+    padding: 18px 22px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--cream);
+    line-height: 1.75;
+    white-space: pre-line;
+}
+.audit-prose {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--cream-2);
+}
+.audit-sources {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--mute);
+    line-height: 1.9;
+}
+.audit-sources span {
+    color: var(--gold);
+    margin-right: 10px;
+}
+.audit-sens-control {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 0 22px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 22px;
+}
+.audit-sens-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    color: var(--mute);
+    text-transform: uppercase;
+    min-width: 90px;
+}
+.audit-sens-slider {
+    flex: 1;
+    appearance: none;
+    -webkit-appearance: none;
+    height: 2px;
+    background: var(--line-strong);
+    outline: none;
+    cursor: pointer;
+}
+.audit-sens-slider::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 2px solid var(--navy);
+}
+.audit-sens-slider::-moz-range-thumb {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+    border: 2px solid var(--navy);
+}
+.audit-sens-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    min-width: 72px;
+    text-align: right;
+}
+.audit-sens-result {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    color: var(--cream);
+    margin-bottom: 8px;
+}
+.audit-sens-delta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+}
+.audit-sens-delta.neg { color: var(--red); }
+
+.audit-trigger {
+    cursor: pointer;
+    position: relative;
+    transition: color 0.2s ease;
+}
+.audit-trigger::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(to right, var(--gold-2) 50%, transparent 50%);
+    background-size: 6px 1px;
+    opacity: 0.5;
+}
+.audit-trigger:hover::after { opacity: 1; }
+
+/* =====================================================================
+   RESPONSIVE
+   ===================================================================== */
+@media (max-width: 1400px) {
+    .more-panel-inner { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .anchor-number { font-size: 130px; }
+    .anchor-number .ccy { font-size: 52px; top: 16px; }
+    .resolution-anchor { font-size: 124px; }
+    .resolution-anchor .ccy { font-size: 46px; }
+    .slide-title { font-size: 68px; }
+    .slide { padding: 50px 50px 80px; }
+}
+@media (max-width: 1100px) {
+    .anchor-number { font-size: 96px; }
+    .anchor-number .ccy { font-size: 40px; top: 10px; }
+    .slide-title { font-size: 54px; }
+    .resolution-anchor { font-size: 92px; }
+    .resolution-anchor .ccy { font-size: 36px; }
+    .audit-item-value { font-size: 30px; }
+    .situation-grid, .resolution-head, .cta-block, .ebit-mini-row {
+        grid-template-columns: 1fr; gap: 32px;
+    }
+    .compl-grid, .phases-row { grid-template-columns: 1fr; }
+    .compl-cell { border-right: none; border-bottom: 1px solid var(--line); }
+    .audit-row { grid-template-columns: 1fr 1fr; }
+    .welcome-cards { grid-template-columns: 1fr 1fr; }
+    .slide { padding: 40px 28px 80px; }
+    .rail { padding: 0 14px; }
+    .rail-filter { padding: 0 10px; }
+    .rail-filter-label { font-size: 8px; }
+    .rail-filter-value { font-size: 9.5px; }
+    .more-panel-inner { grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px 20px; }
+    .more-panel.open { max-height: 480px; }
+    body.more-open .deck { padding-top: 480px; }
+}
+@media (max-width: 640px) {
+    .slide-title { font-size: 38px; }
+    .anchor-number { font-size: 72px; }
+    .resolution-anchor { font-size: 68px; }
+    .welcome-title { font-size: 36px; }
+    .audit-panel { width: 100%; }
+    .nav-arrow { width: 36px; height: 36px; }
+    .audit-row { grid-template-columns: 1fr; }
+    .evidence-row { grid-template-columns: 1fr; gap: 16px; }
+    .welcome-cards { grid-template-columns: 1fr; }
+    .more-panel-inner { grid-template-columns: 1fr; }
+}
+
+
+/* ============= SLIDE HERO (3) - número centralizado, máximo respiro ============= */
+.slide-hero .slide-inner {
+    min-height: calc(100vh - 72px - 100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 0;
+}
+.slide-hero .slide-header {
+    width: 100%;
+    max-width: 1280px;
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+    position: absolute;
+    top: 60px;
+    left: 0; right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 80px 28px;
+}
+.slide-hero .slide-header::after {
+    content: '';
+    display: block;
+    height: 1px;
+    background: var(--line);
+    width: 100%;
+    margin-top: 28px;
+    position: absolute;
+    bottom: 0;
+    left: 0; right: 0;
+}
+.hero-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.30em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 32px;
+}
+.hero-anchor {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 220px;
+    font-weight: 500;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+    color: var(--green);
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    margin-bottom: 32px;
+    display: inline-block;
+}
+.hero-anchor:hover { opacity: 0.85; }
+.hero-anchor .ccy {
+    font-size: 80px;
+    color: var(--mute);
+    font-weight: 400;
+    margin-right: 18px;
+    vertical-align: top;
+    line-height: 1;
+    position: relative;
+    top: 28px;
+}
+.hero-anchor .unit {
+    font-size: 64px;
+    color: var(--mute);
+    font-weight: 400;
+    margin-left: 14px;
+}
+.hero-tagline {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 28px;
+    line-height: 1.5;
+    color: var(--cream-2);
+    max-width: 720px;
+    margin: 0 auto 36px;
+    font-weight: 400;
+}
+.hero-tagline em {
+    color: var(--gold);
+    font-weight: 500;
+    font-style: normal;
+}
+.hero-secondary {
+    display: flex;
+    gap: 56px;
+    margin-top: 12px;
+}
+.hero-secondary-item {
+    cursor: pointer;
+    transition: padding-top 0.2s ease;
+}
+.hero-secondary-item:hover { padding-top: 4px; }
+.hero-secondary-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--mute);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+}
+.hero-secondary-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    color: var(--cream);
+    font-weight: 500;
+}
+.hero-hint {
+    margin-top: 40px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--mute-2);
+    text-transform: uppercase;
+}
+
+/* ============= MECÂNICA (4) ============= */
+.mechanic-section { margin-bottom: 80px; }
+.mechanic-section:last-child { margin-bottom: 0; }
+.mechanic-section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.24em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+}
+
+/* ============= CTA SLIDE (5) ============= */
+.slide-cta .slide-inner {
+    min-height: calc(100vh - 72px - 100px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.cta-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 84px;
+    font-weight: 500;
+    line-height: 1.0;
+    letter-spacing: -0.02em;
+    color: var(--cream);
+    margin-bottom: 48px;
+    max-width: 1000px;
+}
+.cta-hero-title em {
+    font-style: italic;
+    color: var(--gold);
+}
+.cta-final-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    margin-top: 32px;
+}
+.cta-final-steps {
+    list-style: none;
+    padding: 0;
+}
+.cta-final-steps li {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px;
+    color: var(--cream-2);
+    line-height: 1.45;
+}
+.cta-final-steps li:last-child { border-bottom: none; }
+.cta-final-steps .stepn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    min-width: 28px;
+    letter-spacing: 0.10em;
+}
+
+/* Responsive for hero */
+@media (max-width: 1400px) {
+    .hero-anchor { font-size: 180px; }
+    .hero-anchor .ccy { font-size: 64px; }
+    .cta-hero-title { font-size: 64px; }
+}
+@media (max-width: 1100px) {
+    .hero-anchor { font-size: 120px; }
+    .hero-anchor .ccy { font-size: 48px; top: 18px; }
+    .hero-anchor .unit { font-size: 40px; }
+    .hero-secondary { flex-direction: column; gap: 24px; align-items: center; }
+    .cta-hero-title { font-size: 48px; }
+    .cta-final-grid { grid-template-columns: 1fr; gap: 32px; }
+    .slide-hero .slide-header { padding: 0 28px 24px; top: 40px; }
+}
+@media (max-width: 640px) {
+    .hero-anchor { font-size: 80px; }
+    .hero-anchor .ccy { font-size: 32px; top: 8px; }
+    .hero-tagline { font-size: 18px; }
+    .cta-hero-title { font-size: 36px; }
+}
+
+
+
+/* ============= MULTI-SELEÇÃO DE CIAS ============= */
+.rail-menu-cia .rail-menu-item {
+    cursor: pointer;
+    user-select: none;
+}
+.rail-menu-cia .rail-menu-item::before {
+    content: '';
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--mute);
+    margin-right: 14px;
+    flex-shrink: 0;
+    background: transparent;
+    position: relative;
+    transition: all 0.15s ease;
+}
+.rail-menu-cia .rail-menu-item.active::before {
+    background: var(--gold);
+    border-color: var(--gold);
+}
+.rail-menu-cia .rail-menu-item.active::after {
+    content: '';
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    width: 4px; height: 8px;
+    border-right: 2px solid var(--bg);
+    border-bottom: 2px solid var(--bg);
+    transform: translateY(-65%) rotate(45deg);
+}
+.rail-menu-cia .rail-menu-actions {
+    padding: 12px 20px;
+    border-top: 1px solid var(--line-strong);
+    background: var(--bg-2);
+    display: flex;
+    gap: 16px;
+    justify-content: space-between;
+}
+.rail-menu-cia .menu-action-btn {
+    background: transparent;
+    border: none;
+    color: var(--gold);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 4px 8px;
+    transition: color 0.15s ease;
+    font-weight: 500;
+}
+.rail-menu-cia .menu-action-btn:hover { color: var(--gold-2); }
+.rail-menu-cia .menu-action-btn.muted { color: var(--mute); }
+.rail-menu-cia .menu-action-btn.muted:hover { color: var(--ink); }
+
+/* Badge consolidado */
+.consolidated-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 4px 11px;
+    margin-left: 14px;
+    vertical-align: middle;
+    font-weight: 500;
+    border-radius: 2px;
+}
+
+/* ============= AJUSTES DE COR PARA PALETA CLARA ============= */
+::selection { background: var(--gold); color: var(--bg); }
+
+/* Texto editorial preserva contraste */
+.slide-title { color: var(--ink); }
+.slide-title em { color: var(--gold); }
+.slide-lede { color: var(--ink-3); }
+
+/* Anchor numbers em navy escuro (não verde mais — verde sobre creme fica fraco) */
+.anchor-number { color: var(--ink); }
+.anchor-number:hover { color: var(--gold); }
+.anchor-number .ccy { color: var(--mute); }
+.anchor-number .unit { color: var(--mute); }
+
+.resolution-anchor { color: var(--green); }
+.resolution-anchor:hover { opacity: 0.8; }
+.resolution-anchor .ccy, .resolution-anchor .unit { color: var(--mute); }
+
+/* Hero anchor em verde editorial (mais escuro pra ler sobre creme) */
+.hero-anchor { color: var(--green); }
+.hero-anchor .ccy, .hero-anchor .unit { color: var(--mute); }
+
+/* Sidebar values */
+.sidebar-row-value { color: var(--ink); }
+.sidebar-row-value.pos { color: var(--green); }
+.sidebar-row-value.warn { color: var(--red); }
+.sidebar-row-value.gold { color: var(--gold); }
+.sidebar-row-label { color: var(--mute); }
+
+/* Slide-num eyebrow */
+.slide-num { color: var(--gold); }
+.slide-meta { color: var(--mute); }
+.anchor-label, .anchor-caption { color: var(--mute); }
+.resolution-anchor-label { color: var(--gold); }
+
+/* Evidence cards sobre creme */
+.evidence-card {
+    border-color: var(--line-strong);
+    background: var(--bg-2);
+}
+.evidence-card:hover { border-color: var(--gold); background: var(--bg-3); }
+.evidence-tag { color: var(--gold); }
+.evidence-headline { color: var(--ink); }
+.evidence-headline.warn { color: var(--red); }
+.evidence-sub { color: var(--ink-3); }
+
+/* Slide 2 complication cells */
+.compl-grid {
+    border-color: var(--line-strong);
+    background: var(--bg-2);
+}
+.compl-cell { border-right-color: var(--line); }
+.compl-cell:hover { background: rgba(139,58,58,0.05); }
+.compl-cell-num { color: var(--red); }
+.compl-cell-name { color: var(--ink); }
+.compl-cell-evidence { color: var(--ink-3); }
+.compl-cell-data { border-top-color: var(--line); }
+.compl-cell-data-value { color: var(--ink); }
+.compl-cell-data-label { color: var(--mute); }
+
+/* Voice block sobre creme */
+.voice-block {
+    background: var(--bg-2);
+    border-left-color: var(--gold);
+}
+.voice-block::before { color: var(--gold); opacity: 0.5; }
+.voice-text { color: var(--ink); }
+.voice-author { color: var(--gold); }
+.voice-role { color: var(--mute); }
+
+/* Audit-row items */
+.audit-row {
+    border-top-color: var(--line);
+    border-bottom-color: var(--line);
+}
+.audit-item-label { color: var(--mute); }
+.audit-item-value { color: var(--ink); }
+.audit-item-value .ccy { color: var(--mute); }
+.audit-item-sub { color: var(--mute); }
+
+/* Phases */
+.phase-block {
+    border-color: var(--line-strong);
+    background: var(--bg);
+}
+.phase-block:hover { border-color: var(--gold); background: var(--bg-2); }
+.phase-num { color: var(--gold); }
+.phase-name { color: var(--ink); }
+.phase-period { color: var(--mute); border-bottom-color: var(--line); }
+.phase-capture { color: var(--ink); }
+.phase-capture-label { color: var(--mute); }
+
+/* EBIT mini section */
+.ebit-mini {
+    background: var(--bg-2);
+    border-left-color: var(--gold);
+}
+.ebit-mini-label { color: var(--gold); }
+.ebit-mini-title { color: var(--ink); }
+.ebit-mini-title em { color: var(--gold); }
+.ebit-mini-val { color: var(--ink); }
+.ebit-mini-val .small { color: var(--mute); }
+.ebit-mini-sub { color: var(--mute); }
+
+/* CTA + contato */
+.cta-hero-title { color: var(--ink); }
+.cta-hero-title em { color: var(--gold); }
+.cta-final-steps li {
+    color: var(--ink-3);
+    border-bottom-color: var(--line);
+}
+.cta-final-steps .stepn { color: var(--gold); }
+.cta-contact {
+    background: var(--bg-2);
+    border-color: var(--line-strong);
+}
+.cta-contact-label { color: var(--gold); }
+.cta-contact-name { color: var(--ink); }
+.cta-contact-role { color: var(--mute); }
+.cta-contact-line { color: var(--ink-3); border-top-color: var(--line); }
+
+/* Hero (slide 3) */
+.hero-eyebrow { color: var(--gold); }
+.hero-tagline { color: var(--ink-3); }
+.hero-tagline em { color: var(--gold); }
+.hero-secondary-label { color: var(--mute); }
+.hero-secondary-value { color: var(--ink); }
+.hero-hint { color: var(--mute); }
+
+/* Welcome screen */
+.welcome { background: var(--bg); }
+.welcome-eyebrow { color: var(--gold); }
+.welcome-title { color: var(--ink); }
+.welcome-title em { color: var(--gold); }
+.welcome-sub { color: var(--ink-3); }
+.welcome-card {
+    border-color: var(--line-strong);
+    background: var(--bg);
+}
+.welcome-card:hover {
+    border-color: var(--gold);
+    background: var(--bg-2);
+}
+.welcome-card-name { color: var(--ink); }
+.welcome-card-meta { color: var(--mute); border-bottom-color: var(--line); }
+.welcome-card-net-label { color: var(--mute); }
+.welcome-card-net-value { color: var(--gold); }
+
+/* Rail filter selectors */
+.rail-filter { border-right-color: var(--line); }
+.rail-filter:hover { background: var(--bg-2); }
+.rail-filter.active-filter { background: var(--gold-soft); }
+.rail-filter.active-filter .rail-filter-value { color: var(--gold-2); font-weight: 600; }
+.rail-filter::after { border-color: var(--mute); }
+.rail-filter.open::after { border-color: var(--gold); }
+.rail-brand { border-right-color: var(--line); }
+.rail-progress { border-left-color: var(--line); }
+.rail-progress-label { color: var(--mute); }
+.rail-progress-dot { background: var(--line-strong); }
+.rail-progress-dot.active { background: var(--gold); }
+.rail-progress-dot:hover { background: var(--ink-3); }
+
+.rail-more {
+    border-right-color: var(--line);
+    color: var(--gold);
+}
+.rail-more:hover { background: var(--gold-soft); }
+.rail-more.active { background: var(--gold-soft); color: var(--gold-2); }
+.rail-more .count { background: var(--gold); color: var(--bg); }
+.rail-reset { color: var(--mute); border-color: var(--line-strong); }
+.rail-reset:hover { color: var(--gold); border-color: var(--gold); }
+
+/* Rail menu items */
+.rail-menu-item:hover { background: var(--bg-2); }
+.rail-menu-item-label { color: var(--ink); }
+.rail-menu-item-meta { color: var(--mute); }
+.rail-menu-item.active .rail-menu-item-label { color: var(--gold-2); }
+.rail-menu-item.active::before {
+    content: '';
+    display: inline-block;
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    margin-right: 10px;
+}
+/* Mas no menu de cia, override (já tem ::before customizado de checkbox) */
+.rail-menu-cia .rail-menu-item.active::before {
+    content: '';
+    width: 14px; height: 14px;
+    border-radius: 0;
+    background: var(--gold);
+    border-color: var(--gold);
+    margin-right: 14px;
+}
+
+/* More-panel sobre creme */
+.more-panel { background: var(--bg-2); border-bottom-color: var(--line-gold); }
+.filter-group { border-left-color: var(--line); }
+.filter-group-label { color: var(--gold); }
+.filter-pill {
+    border-color: var(--line-strong);
+    color: var(--ink-3);
+    background: transparent;
+}
+.filter-pill:hover { border-color: var(--gold); color: var(--gold); }
+.filter-pill.active {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    color: var(--gold-2);
+    font-weight: 600;
+}
+
+/* Nav arrows sobre creme */
+.nav-arrow {
+    background: rgba(248,244,236,0.92);
+    border-color: var(--line-strong);
+}
+.nav-arrow:hover { border-color: var(--gold); background: var(--gold-soft); }
+.nav-arrow svg { stroke: var(--ink); }
+.nav-arrow:hover svg { stroke: var(--gold); }
+
+/* Hint footer */
+.hint-footer { color: var(--mute); }
+.hint-footer .kbd { border-color: var(--line); color: var(--gold); }
+
+/* Audit panel sobre creme */
+.audit-backdrop { background: rgba(10,22,40,0.40); }
+.audit-panel { background: var(--bg); border-left-color: var(--line-gold); box-shadow: -24px 0 64px rgba(10,22,40,0.15); }
+.audit-panel-header { border-bottom-color: var(--line); }
+.audit-panel-eyebrow { color: var(--gold); }
+.audit-panel-title { color: var(--ink); }
+.audit-panel-close { color: var(--ink); border-color: var(--line); }
+.audit-panel-close:hover { color: var(--gold); border-color: var(--gold); }
+.audit-value { color: var(--ink); }
+.audit-section-label { color: var(--gold); }
+.audit-formula { background: var(--bg-2); border-left-color: var(--gold); color: var(--ink); }
+.audit-prose { color: var(--ink-3); }
+.audit-sources { color: var(--mute); }
+.audit-sources span { color: var(--gold); }
+.audit-sens-control { border-bottom-color: var(--line); }
+.audit-sens-label { color: var(--mute); }
+.audit-sens-slider { background: var(--line-strong); }
+.audit-sens-slider::-webkit-slider-thumb { background: var(--gold); border-color: var(--bg); }
+.audit-sens-slider::-moz-range-thumb { background: var(--gold); border-color: var(--bg); }
+.audit-sens-val { color: var(--gold); }
+.audit-sens-result { color: var(--ink); }
+.audit-sens-delta { color: var(--green); }
+.audit-sens-delta.neg { color: var(--red); }
+
+/* Sidebar stack */
+.sidebar-stack { border-left-color: var(--line); }
+.sidebar-row { border-bottom-color: var(--line); }
+
+/* Slide header */
+.slide-header { border-bottom-color: var(--line); }
+.mechanic-section-label { color: var(--gold); border-bottom-color: var(--line); }
+
+/* Audit trigger underline (linha dourada tracejada) */
+.audit-trigger::after {
+    background: linear-gradient(to right, var(--gold) 50%, transparent 50%);
+    opacity: 0.4;
+}
+.audit-trigger:hover::after { opacity: 1; }
+
+</style>
+</head>
+<body class="no-cia">
+
+<div class="rail">
+    <div class="rail-brand">
+        <img class="rail-brand-logo" alt="TAT" src="data:image/jpeg;base64,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">
+        <span class="rail-brand-name">TAT Operating</span>
+    </div>
+
+    <div class="rail-filter" data-filter="cia" id="filterCia">
+        <span class="rail-filter-label">Operador</span>
+        <span class="rail-filter-value" id="filterCiaValue">Selecione</span>
+        <div class="rail-menu rail-menu-cia" data-menu="cia">
+            <div class="rail-menu-item" data-cia-multi="GOL">
+                <span class="rail-menu-item-label">GOL</span>
+                <span class="rail-menu-item-meta">BRL · 140 ac</span>
+            </div>
+            <div class="rail-menu-item" data-cia-multi="Azul">
+                <span class="rail-menu-item-label">Azul</span>
+                <span class="rail-menu-item-meta">BRL · 160 ac</span>
+            </div>
+            <div class="rail-menu-item" data-cia-multi="TAP">
+                <span class="rail-menu-item-label">TAP</span>
+                <span class="rail-menu-item-meta">EUR · 99 ac</span>
+            </div>
+            <div class="rail-menu-item" data-cia-multi="Etihad">
+                <span class="rail-menu-item-label">Etihad</span>
+                <span class="rail-menu-item-meta">USD · 128 ac</span>
+            </div>
+            <div class="rail-menu-actions">
+                <button class="menu-action-btn" id="ciaSelectAll">Todas (4)</button>
+                <button class="menu-action-btn muted" id="ciaSelectNone">Limpar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="rail-filter" data-filter="horizon" id="filterHorizon">
+        <span class="rail-filter-label">Horizonte</span>
+        <span class="rail-filter-value" id="filterHorizonValue">6 anos</span>
+        <div class="rail-menu" data-menu="horizon">
+            <div class="rail-menu-item active" data-horizon="6Y">
+                <span class="rail-menu-item-label">6 anos</span>
+                <span class="rail-menu-item-meta">2026 – 2031</span>
+            </div>
+            <div class="rail-menu-item" data-horizon="3Y">
+                <span class="rail-menu-item-label">3 anos</span>
+                <span class="rail-menu-item-meta">2026 – 2028</span>
+            </div>
+            <div class="rail-menu-item" data-horizon="1Y">
+                <span class="rail-menu-item-label">1 ano</span>
+                <span class="rail-menu-item-meta">2026 setup</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="rail-filter" data-filter="scenario" id="filterScenario">
+        <span class="rail-filter-label">Cenário QAV</span>
+        <span class="rail-filter-value" id="filterScenarioValue">Base</span>
+        <div class="rail-menu" data-menu="scenario">
+            <div class="rail-menu-item" data-scenario="bear">
+                <span class="rail-menu-item-label">Bear</span>
+                <span class="rail-menu-item-meta">QAV − 0,50</span>
+            </div>
+            <div class="rail-menu-item active" data-scenario="base">
+                <span class="rail-menu-item-label">Base</span>
+                <span class="rail-menu-item-meta">QAV atual</span>
+            </div>
+            <div class="rail-menu-item" data-scenario="bull">
+                <span class="rail-menu-item-label">Bull</span>
+                <span class="rail-menu-item-meta">QAV + 0,75</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="rail-filter" data-filter="currency" id="filterCurrency">
+        <span class="rail-filter-label">Moeda</span>
+        <span class="rail-filter-value" id="filterCurrencyValue">Nativa</span>
+        <div class="rail-menu" data-menu="currency">
+            <div class="rail-menu-item active" data-currency="native">
+                <span class="rail-menu-item-label">Nativa</span>
+                <span class="rail-menu-item-meta">moeda do operador</span>
+            </div>
+            <div class="rail-menu-item" data-currency="USD">
+                <span class="rail-menu-item-label">USD</span>
+                <span class="rail-menu-item-meta">PTAX Mai/26</span>
+            </div>
+            <div class="rail-menu-item" data-currency="BRL">
+                <span class="rail-menu-item-label">BRL</span>
+                <span class="rail-menu-item-meta">5,20 USD/BRL</span>
+            </div>
+            <div class="rail-menu-item" data-currency="EUR">
+                <span class="rail-menu-item-label">EUR</span>
+                <span class="rail-menu-item-meta">0,93 USD/EUR</span>
+            </div>
+        </div>
+    </div>
+
+    <button class="rail-more" id="moreToggle">
+        + Filtros<span class="count zero" id="moreCount">0</span>
+    </button>
+
+    <button class="rail-reset hidden" id="railReset">Reset</button>
+
+    <div class="rail-progress">
+        <span class="rail-progress-label" id="slideLabel">1 / 5</span>
+        <div class="rail-progress-dots">
+            <div class="rail-progress-dot active" data-goto="1" title="Situação"></div>
+            <div class="rail-progress-dot" data-goto="2" title="Complicação"></div>
+            <div class="rail-progress-dot" data-goto="3" title="Resolução"></div>
+            <div class="rail-progress-dot" data-goto="4" title="Mecânica"></div>
+            <div class="rail-progress-dot" data-goto="5" title="Próximo passo"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ============ PAINEL "+ FILTROS" ============ -->
+<div class="more-panel" id="morePanel">
+    <div class="more-panel-inner">
+        <div class="filter-group">
+            <div class="filter-group-label">Foco do slide</div>
+            <div class="filter-pills" data-group="focus">
+                <button class="filter-pill active" data-val="all">Tudo</button>
+                <button class="filter-pill" data-val="situation">Situação</button>
+                <button class="filter-pill" data-val="complication">Complicação</button>
+                <button class="filter-pill" data-val="resolution">Resolução</button>
+                <button class="filter-pill" data-val="ebit">EBIT</button>
+                <button class="filter-pill" data-val="roadmap">Roadmap</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-group-label">Visão analítica</div>
+            <div class="filter-pills" data-group="view">
+                <button class="filter-pill active" data-val="full">Completa</button>
+                <button class="filter-pill" data-val="summary">Resumo</button>
+                <button class="filter-pill" data-val="technical">Técnico</button>
+                <button class="filter-pill" data-val="financial">Financeiro</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-group-label">Tipo de aeronave</div>
+            <div class="filter-pills" data-group="aircraft">
+                <button class="filter-pill active" data-val="all">Toda frota</button>
+                <button class="filter-pill" data-val="narrow">Narrow-body</button>
+                <button class="filter-pill" data-val="wide">Wide-body</button>
+                <button class="filter-pill" data-val="regional">Regional</button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-group-label">Hub principal</div>
+            <div class="filter-pills" data-group="hub" id="hubPills">
+                <button class="filter-pill active" data-val="all">Todos</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="welcome">
+    <div class="welcome-inner">
+        <div class="welcome-eyebrow">TAT Operating · Memorando Executivo · Mai 2026</div>
+        <h1 class="welcome-title">A próxima decisão é<br><em>técnica</em>, não comercial.</h1>
+        <p class="welcome-sub">Selecione o operador para iniciar a análise. Cada número apresentado é auditável: clique para ver fórmula, método e fontes.</p>
+        <div class="welcome-cards">
+            <div class="welcome-card" data-welcome-cia="GOL">
+                <div class="welcome-card-name">GOL</div>
+                <div class="welcome-card-meta">BRL · 140 ac · GRU/CGH</div>
+                <div class="welcome-card-net-label">Economia líquida 6Y</div>
+                <div class="welcome-card-net-value">R$ 146,7 MM</div>
+            </div>
+            <div class="welcome-card" data-welcome-cia="Azul">
+                <div class="welcome-card-name">Azul</div>
+                <div class="welcome-card-meta">BRL · 160 ac · VCP/CNF</div>
+                <div class="welcome-card-net-label">Economia líquida 6Y</div>
+                <div class="welcome-card-net-value">R$ 79,0 MM</div>
+            </div>
+            <div class="welcome-card" data-welcome-cia="TAP">
+                <div class="welcome-card-name">TAP</div>
+                <div class="welcome-card-meta">EUR · 99 ac · LIS</div>
+                <div class="welcome-card-net-label">Economia líquida 6Y</div>
+                <div class="welcome-card-net-value">€ 14,3 MM</div>
+            </div>
+            <div class="welcome-card" data-welcome-cia="Etihad">
+                <div class="welcome-card-name">Etihad</div>
+                <div class="welcome-card-meta">USD · 128 ac · AUH</div>
+                <div class="welcome-card-net-label">Net savings 6Y</div>
+                <div class="welcome-card-net-value">US$ 27,5 MM</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="deck" id="deck">
+
+    <!-- SLIDE 1 · SITUAÇÃO -->
+    <section class="slide active" data-slide="1">
+        <div class="slide-inner">
+            <div class="slide-header">
+                <span class="slide-num">01 · Situação</span>
+                <span class="slide-meta" id="metaSituation">GOL · 2026</span>
+            </div>
+
+            <h2 class="slide-title">Há um custo evitável<br>de combustível na sua malha.<em> Hoje.</em></h2>
+            <p class="slide-lede" id="ledeSituation">QAV no maior hub doméstico saltou +100% vs Fev/2026. Aviação opera com margens estreitas. Cada litro de combustível economizado vai direto para EBIT.</p>
+
+            <div class="situation-grid">
+                <div data-block="situation-anchor">
+                    <div class="anchor-label">Volume de QAV economizável · 6 anos</div>
+                    <div class="anchor-number audit-trigger" data-audit="volume">
+                        <span id="anchorVolume">30,5</span><span class="unit">ML</span>
+                    </div>
+                    <div class="anchor-caption">Litros não consumidos · clique para auditoria</div>
+                </div>
+                <div class="sidebar-stack" data-block="situation-side">
+                    <div class="sidebar-row audit-trigger" data-audit="qav-hub">
+                        <span class="sidebar-row-label">QAV no hub</span>
+                        <span class="sidebar-row-value warn" id="sideHubQav">R$ 6,40/L</span>
+                    </div>
+                    <div class="sidebar-row audit-trigger" data-audit="qav-delta">
+                        <span class="sidebar-row-label">Alta vs base</span>
+                        <span class="sidebar-row-value warn" id="sideHubDelta">+100%</span>
+                    </div>
+                    <div class="sidebar-row audit-trigger" data-audit="frota">
+                        <span class="sidebar-row-label">Frota analisada</span>
+                        <span class="sidebar-row-value" id="sideFrota">140 ac</span>
+                    </div>
+                    <div class="sidebar-row audit-trigger" data-audit="co2">
+                        <span class="sidebar-row-label">CO₂ evitável</span>
+                        <span class="sidebar-row-value pos" id="sideCo2">76 kt</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="evidence-row" data-block="situation-evidence" data-tech-only>
+                <div class="evidence-card audit-trigger" data-audit="qav-share">
+                    <div class="evidence-tag">Custo Operacional</div>
+                    <div class="evidence-headline">45%</div>
+                    <div class="evidence-sub">QAV no custo operacional total (ABEAR, 2026). Qualquer redução tem impacto duplo: caixa e margem.</div>
+                </div>
+                <div class="evidence-card audit-trigger" data-audit="demand-peak">
+                    <div class="evidence-tag">Demanda Estrutural</div>
+                    <div class="evidence-headline warn">+40%</div>
+                    <div class="evidence-sub">Demanda jet fuel em ago/26 vs mar/26 (IEA Birol). Pico operacional do verão setentrional. Pressão persistente.</div>
+                </div>
+                <div class="evidence-card audit-trigger" data-audit="margin-pressure">
+                    <div class="evidence-tag">Margem da Indústria</div>
+                    <div class="evidence-headline" id="ebitBaseHeadline">2,0%</div>
+                    <div class="evidence-sub" id="ebitBaseSub">EBIT margin típico para operador LatAm pós-recuperação. Cada bps de eficiência importa em sala de board.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 2 · COMPLICAÇÃO -->
+    <section class="slide" data-slide="2">
+        <div class="slide-inner">
+            <div class="slide-header">
+                <span class="slide-num">02 · Complicação</span>
+                <span class="slide-meta">Por que as alternativas conhecidas não resolvem</span>
+            </div>
+
+            <h2 class="slide-title">As soluções tradicionais<br>são <em>capital-intensivas</em> ou <em>lentas</em>.</h2>
+            <p class="slide-lede">SAF, retrofit de motor, otimização de frota — todas exigem CAPEX bilionário ou prazos de 5-10 anos. A pressão é hoje. O CAPEX disponível é outro.</p>
+
+            <div class="compl-grid" data-block="complication-grid">
+                <div class="compl-cell audit-trigger" data-audit="saf-gap">
+                    <div class="compl-cell-num">01 · CAPEX</div>
+                    <div class="compl-cell-name">SAF a US$ 4-6/galão.</div>
+                    <div class="compl-cell-evidence">Premium de 2-3× sobre QAV convencional. Disponibilidade global &lt;1%. Mandato regulatório crescente sem suprimento à altura.</div>
+                    <div class="compl-cell-data">
+                        <div class="compl-cell-data-value">2-3×</div>
+                        <div class="compl-cell-data-label">premium sobre QAV</div>
+                    </div>
+                </div>
+                <div class="compl-cell audit-trigger" data-audit="fleet-renewal">
+                    <div class="compl-cell-num">02 · TEMPO</div>
+                    <div class="compl-cell-name">Renovação de frota é decenal.</div>
+                    <div class="compl-cell-evidence">B777-9, A350F, MAX 10 — todos com lead time 4-7 anos. Decisão hoje afeta caixa 2031+. A pressão de QAV é Q3/26.</div>
+                    <div class="compl-cell-data">
+                        <div class="compl-cell-data-value">4-7 anos</div>
+                        <div class="compl-cell-data-label">lead time de entrega</div>
+                    </div>
+                </div>
+                <div class="compl-cell audit-trigger" data-audit="hedge-limit">
+                    <div class="compl-cell-num">03 · LIMITE</div>
+                    <div class="compl-cell-name">Hedge é amortecedor, não solução.</div>
+                    <div class="compl-cell-evidence">Cobertura típica 30-50% por 12 meses. Não muda o cost-to-serve estrutural — apenas suaviza a derivada. Risco de basis.</div>
+                    <div class="compl-cell-data">
+                        <div class="compl-cell-data-value">30-50%</div>
+                        <div class="compl-cell-data-label">cobertura típica</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="voice-block audit-trigger" data-audit="voice-source" data-block="complication-voice" data-fin-only>
+                <p class="voice-text" id="voiceText">QAV já representa 45% dos custos operacionais das companhias aéreas brasileiras — qualquer economia tem impacto duplo.</p>
+                <div class="voice-author" id="voiceAuthor">Juliano Noman</div>
+                <div class="voice-role" id="voiceRole">Diretor · ABEAR</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 3 · RESOLUÇÃO -->
+    <!-- SLIDE 3 · HERO (número-âncora puro) -->
+    <section class="slide slide-hero" data-slide="3">
+        <div class="slide-inner">
+            <div class="slide-header">
+                <span class="slide-num">03 · Resolução</span>
+                <span class="slide-meta">A economia capturável</span>
+            </div>
+            <div class="hero-eyebrow">Economia líquida · 6 anos · pós honorários TAT</div>
+            <div class="hero-anchor audit-trigger" data-audit="liq-6y">
+                <span class="ccy" id="resCcy">R$</span><span id="resLiq">146,67</span><span class="unit">MM</span>
+            </div>
+            <p class="hero-tagline">
+                Em <em>5 meses</em> a economia paga o fee fixo.<br>
+                Os <em>55 meses</em> seguintes geram caixa para EBIT.
+            </p>
+            <div class="hero-secondary">
+                <div class="hero-secondary-item audit-trigger" data-audit="ratio">
+                    <div class="hero-secondary-label">Razão líq/honorário</div>
+                    <div class="hero-secondary-value" id="ratioVal">4,2×</div>
+                </div>
+                <div class="hero-secondary-item audit-trigger" data-audit="payback">
+                    <div class="hero-secondary-label">Payback fee fixo</div>
+                    <div class="hero-secondary-value" id="paybackVal">4,8 meses</div>
+                </div>
+            </div>
+            <div class="hero-hint">Clique no número para auditoria · → Mecânica</div>
+        </div>
+    </section>
+
+    <!-- SLIDE 4 · MECÂNICA (audit-row + fases + EBIT) -->
+    <section class="slide" data-slide="4">
+        <div class="slide-inner">
+            <div class="slide-header">
+                <span class="slide-num">04 · Mecânica</span>
+                <span class="slide-meta">Os números por trás do líquido</span>
+            </div>
+            <h2 class="slide-title">A captura é <em>auditável</em><br>linha por linha.</h2>
+            <p class="slide-lede">Bruta, honorários, razão, payback. Cada um clicável. Cada um com fórmula, premissas e fontes. Cada um defensável em board.</p>
+
+            <div class="mechanic-section">
+                <div class="mechanic-section-label">Decomposição financeira</div>
+                <div class="audit-row" style="margin: 0; padding: 0; border: none;">
+                    <div class="audit-item audit-trigger" data-audit="bruta-6y">
+                        <div class="audit-item-label">Economia bruta 6Y</div>
+                        <div class="audit-item-value"><span class="ccy" id="brutaCcy">R$</span><span id="brutaVal">180,14</span> MM</div>
+                        <div class="audit-item-sub">redução direta de QAV</div>
+                    </div>
+                    <div class="audit-item audit-trigger" data-audit="tat-6y">
+                        <div class="audit-item-label">Honorários TAT</div>
+                        <div class="audit-item-value"><span class="ccy" id="tatCcy">R$</span><span id="tatVal">34,68</span> MM</div>
+                        <div class="audit-item-sub">fee fixo + success</div>
+                    </div>
+                    <div class="audit-item audit-trigger" data-audit="ratio">
+                        <div class="audit-item-label">Razão líq/honorário</div>
+                        <div class="audit-item-value" id="ratioVal2">4,2×</div>
+                        <div class="audit-item-sub">$1 pago retorna $4,2</div>
+                    </div>
+                    <div class="audit-item audit-trigger" data-audit="payback">
+                        <div class="audit-item-label">Payback fee fixo</div>
+                        <div class="audit-item-value" id="paybackVal2">4,8<span style="font-size:18px;color:var(--mute);font-weight:400;"> meses</span></div>
+                        <div class="audit-item-sub">setup recuperado &lt; 5m</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mechanic-section">
+                <div class="mechanic-section-label">Execução em três fases</div>
+                <div class="phases-row" data-block="resolution-phases" style="margin: 0;">
+                    <div class="phase-block audit-trigger" data-audit="phase-1">
+                        <div class="phase-num">Fase 01</div>
+                        <div class="phase-name">Setup</div>
+                        <div class="phase-period">Jan – Jun 2026</div>
+                        <div class="phase-capture"><span id="phase1Cap">R$ 21,6 MM</span></div>
+                        <div class="phase-capture-label">captura bruta</div>
+                    </div>
+                    <div class="phase-block audit-trigger" data-audit="phase-2">
+                        <div class="phase-num">Fase 02</div>
+                        <div class="phase-name">Ramp-up</div>
+                        <div class="phase-period">Jul/26 – Dez/27</div>
+                        <div class="phase-capture"><span id="phase2Cap">R$ 41,4 MM</span></div>
+                        <div class="phase-capture-label">pico de captura</div>
+                    </div>
+                    <div class="phase-block audit-trigger" data-audit="phase-3">
+                        <div class="phase-num">Fase 03</div>
+                        <div class="phase-name">Steady State</div>
+                        <div class="phase-period">2028 – 2031</div>
+                        <div class="phase-capture"><span id="phase3Cap">R$ 117,1 MM</span></div>
+                        <div class="phase-capture-label">esteira anual ~65%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ebit-mini" data-block="ebit" data-tech-only style="margin: 0;">
+                <div class="ebit-mini-label">Impacto na margem operacional</div>
+                <div class="ebit-mini-row">
+                    <div class="ebit-mini-title">A economia desloca <em>EBIT</em> em <em><span id="ebitBpsValue">+19 bps</span></em>.</div>
+                    <div>
+                        <div class="ebit-mini-val"><span id="ebitBaseDisplay">2,0</span><span class="small">%</span></div>
+                        <div class="ebit-mini-sub">EBIT baseline</div>
+                    </div>
+                    <div>
+                        <div class="ebit-mini-val"><span id="ebitAdjDisplay">2,19</span><span class="small">%</span></div>
+                        <div class="ebit-mini-sub">EBIT ajustado</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SLIDE 5 · CTA + Contato -->
+    <section class="slide slide-cta" data-slide="5">
+        <div class="slide-inner">
+            <div class="slide-header">
+                <span class="slide-num">05 · Próximo passo</span>
+                <span class="slide-meta">Auditoria técnica · 30 dias</span>
+            </div>
+            <h2 class="cta-hero-title">A próxima <em>decisão</em><br>é técnica, não comercial.</h2>
+            <div class="cta-final-grid">
+                <div>
+                    <ol class="cta-final-steps">
+                        <li><span class="stepn">01</span><span>Auditoria técnica · 30 dias · sob NDA mútuo · sem fee de implementação até carta de intenções</span></li>
+                        <li><span class="stepn">02</span><span>Modelagem com sua frota real · entrega em 60 dias</span></li>
+                        <li><span class="stepn">03</span><span>Apresentação ao C-Level · com sua equipe técnica</span></li>
+                        <li><span class="stepn">04</span><span>Carta de intenções · saída sem multa no Ano 1</span></li>
+                    </ol>
+                </div>
+                <div class="cta-contact">
+                    <div class="cta-contact-label">Contato Executivo</div>
+                    <div class="cta-contact-name">Frederico</div>
+                    <div class="cta-contact-role">Founding Partner · TAT Operating</div>
+                    <div class="cta-contact-line">fred@tatadvisory.com.br</div>
+                    <div class="cta-contact-line">+55 11 · sob demanda</div>
+                    <div class="cta-contact-line">São Paulo · Brasil</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<!-- NAV ARROWS + HINT + AUDIT PANEL -->
+<button class="nav-arrow prev disabled" id="navPrev" aria-label="Anterior">
+    <svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg>
+</button>
+<button class="nav-arrow next" id="navNext" aria-label="Próxima">
+    <svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>
+</button>
+
+<div class="hint-footer">
+    Navegue com <span class="kbd">←</span><span class="kbd">→</span> · Clique em qualquer número para auditoria
+</div>
+
+<div class="audit-backdrop" id="auditBackdrop"></div>
+<aside class="audit-panel" id="auditPanel">
+    <div class="audit-panel-header">
+        <div>
+            <div class="audit-panel-eyebrow">Auditoria do número</div>
+            <div class="audit-panel-title" id="auditTitle">—</div>
+        </div>
+        <button class="audit-panel-close" id="auditClose" aria-label="Fechar">×</button>
+    </div>
+    <div class="audit-panel-body" id="auditBody"></div>
+</aside>
+
+<script>
+const DATA = {"GOL": {"currency": "BRL", "symbol": "R$", "fleet": 140, "bruta_6y": 180.14, "tat_6y": 34.68, "liq_6y": 146.67, "bruta_ann": 30.02, "fee_fixo": 1.2, "fee_fixo_breakdown": "R$ 400k setup + R$ 800k op. 6m", "qav_baseline": 5.91, "delta_per_005": 1.52, "co2": 76, "volume_6y": 30.5, "qav_hub_default": "GRU", "qav_value_default": "R$ 6,40 – 6,80/L", "qav_delta_default": "+100% vs Fev/2026", "qav_source_default": "Petrobras · Boletim Combustíveis Mai/26", "hubs": ["GRU", "CGH", "BSB", "GIG", "CNF"], "ebit_margin_base": 0.02, "revenue_usd_bb": 2.5, "language": "pt", "voice_text": "QAV já representa 45% dos custos operacionais das companhias aéreas brasileiras — qualquer economia tem impacto duplo.", "voice_name": "Juliano Noman", "voice_role": "Diretor · ABEAR"}, "Azul": {"currency": "BRL", "symbol": "R$", "fleet": 160, "bruta_6y": 96.81, "tat_6y": 18.73, "liq_6y": 78.98, "bruta_ann": 16.13, "fee_fixo": 0.9, "fee_fixo_breakdown": "R$ 300k setup + R$ 600k op. 6m", "qav_baseline": 5.96, "delta_per_005": 0.81, "co2": 41, "volume_6y": 16.2, "qav_hub_default": "VCP", "qav_value_default": "R$ 6,40 – 6,80/L", "qav_delta_default": "+100% vs Fev/2026", "qav_source_default": "Petrobras · Boletim Combustíveis Mai/26", "hubs": ["VCP", "CNF", "REC", "BEL"], "ebit_margin_base": 0.025, "revenue_usd_bb": 3.0, "language": "pt", "voice_text": "QAV já representa 45% dos custos operacionais das companhias aéreas brasileiras — qualquer economia tem impacto duplo.", "voice_name": "Juliano Noman", "voice_role": "Diretor · ABEAR"}, "TAP": {"currency": "EUR", "symbol": "€", "fleet": 99, "bruta_6y": 17.89, "tat_6y": 3.56, "liq_6y": 14.25, "bruta_ann": 2.98, "fee_fixo": 0.24, "fee_fixo_breakdown": "€ 80k setup + € 160k op. 6m", "qav_baseline": 1.06, "delta_per_005": 0.84, "co2": 45, "volume_6y": 16.8, "qav_hub_default": "LIS", "qav_value_default": "€ 1,20 – 1,30/L", "qav_delta_default": "+101% vs 2025", "qav_source_default": "IATA Jet Fuel Monitor · Mai/26", "hubs": ["LIS", "OPO"], "ebit_margin_base": 0.04, "revenue_usd_bb": 4.0, "language": "pt", "voice_text": "A demanda por jet fuel em agosto pode ficar 40% acima de março — é o pico operacional do verão setentrional.", "voice_name": "Fatih Birol", "voice_role": "Executive Director · IEA"}, "Etihad": {"currency": "USD", "symbol": "US$", "fleet": 128, "bruta_6y": 35.98, "tat_6y": 8.71, "liq_6y": 27.47, "bruta_ann": 5.99, "fee_fixo": 0.2, "fee_fixo_breakdown": "US$ 70k setup + US$ 130k op. 6m", "qav_baseline": 0.88, "delta_per_005": 2.05, "co2": 131, "volume_6y": 41.0, "qav_hub_default": "AUH", "qav_value_default": "US$ 1,15 – 1,25/L", "qav_delta_default": "+135% vs base 2023", "qav_source_default": "ADNOC OSP Murban · Apr/26", "hubs": ["AUH", "DXB"], "ebit_margin_base": 0.07, "revenue_usd_bb": 6.5, "language": "en", "voice_text": "We are prioritizing cash flow generation over headline margin — every operational efficiency counts.", "voice_name": "Antonoaldo Neves", "voice_role": "CEO · Etihad Airways"}};
+const HUB_QAV = {"GRU": "R$ 6,40 – 6,80/L", "CGH": "R$ 6,35 – 6,75/L", "GIG": "R$ 6,45 – 6,85/L", "BSB": "R$ 6,30 – 6,70/L", "CNF": "R$ 6,25 – 6,65/L", "VCP": "R$ 6,40 – 6,80/L", "REC": "R$ 6,30 – 6,70/L", "BEL": "R$ 6,35 – 6,75/L", "LIS": "€ 1,20 – 1,30/L", "OPO": "€ 1,18 – 1,28/L", "AUH": "US$ 1,15 – 1,25/L", "DXB": "US$ 1,18 – 1,28/L"};
+
+
+/* =====================================================================
+   STATE
+   ===================================================================== */
+const FX_TO_USD = { BRL: 1/5.20, USD: 1.0, EUR: 1/0.93 };
+const FX_FROM_USD = { BRL: 5.20, USD: 1.0, EUR: 0.93 };
+const CCY_SYMBOL = { BRL:'R$', USD:'US$', EUR:'€' };
+
+const SCENARIO_DELTA = { bear: -0.50, base: 0, bull: 0.75 };
+const HORIZON_MULT = { '6Y': 1.0, '3Y': 0.5, '1Y': 1/6 };
+const HORIZON_LABEL = { '6Y': '6 anos', '3Y': '3 anos', '1Y': '1 ano' };
+const AIRCRAFT_MULT = { all: 1.0, narrow: 0.55, wide: 0.40, regional: 0.18 };
+const AIRCRAFT_LABEL = { all: null, narrow: 'narrow-body', wide: 'wide-body', regional: 'regional' };
+
+let STATE = {
+    cia: null,
+    horizon: '6Y',
+    scenario: 'base',
+    currency: 'native',
+    focus: 'all',
+    view: 'full',
+    aircraft: 'all',
+    hub: 'all',
+    slide: 1,
+};
+
+/* Defaults para comparar e contar filtros ativos */
+const DEFAULTS = {
+    horizon: '6Y', scenario: 'base', currency: 'native',
+    focus: 'all', view: 'full', aircraft: 'all', hub: 'all'
+};
+
+/* =====================================================================
+   localStorage
+   ===================================================================== */
+try {
+    const raw = localStorage.getItem('tat_memo_v6');
+    if (raw){
+        const d = JSON.parse(raw);
+        if (d && d.expires > Date.now()){
+            if (Array.isArray(d.cias)) {
+                selectedCias = d.cias.filter(c => DATA[c]);
+                if (selectedCias.length > 0) STATE.cia = selectedCias[0];
+            } else if (DATA[d.cia]) {
+                STATE.cia = d.cia;
+                selectedCias = [d.cia];
+            }
+            if (d.horizon)   STATE.horizon = d.horizon;
+            if (d.scenario)  STATE.scenario = d.scenario;
+            if (d.currency)  STATE.currency = d.currency;
+            if (d.focus)     STATE.focus = d.focus;
+            if (d.view)      STATE.view = d.view;
+            if (d.aircraft)  STATE.aircraft = d.aircraft;
+            if (d.hub)       STATE.hub = d.hub;
+            if (d.slide)     STATE.slide = d.slide;
+        }
+    }
+} catch(e){}
+
+function persistState(){
+    try {
+        localStorage.setItem('tat_memo_v6', JSON.stringify({
+            cias: selectedCias,
+            cia: STATE.cia, horizon: STATE.horizon, scenario: STATE.scenario,
+            currency: STATE.currency, focus: STATE.focus, view: STATE.view,
+            aircraft: STATE.aircraft, hub: STATE.hub, slide: STATE.slide,
+            expires: Date.now() + 24*3600*1000
+        }));
+    } catch(e){}
+}
+
+/* =====================================================================
+   FORMATTERS
+   ===================================================================== */
+function fmt(n, dec){
+    dec = dec === undefined ? 2 : dec;
+    if (!isFinite(n)) return '—';
+    return n.toLocaleString('pt-BR', {minimumFractionDigits: dec, maximumFractionDigits: dec});
+}
+function fmtInt(n){
+    if (!isFinite(n)) return '—';
+    return Math.round(n).toLocaleString('pt-BR');
+}
+function fxConvert(value, from, to){
+    if (from === to) return value;
+    return value * FX_TO_USD[from] * FX_FROM_USD[to];
+}
+
+/* =====================================================================
+   COMPUTE EFFECTIVE — motor único
+   ===================================================================== */
+
+/* ===== MULTI-CIA ===== */
+let selectedCias = [];  /* array de cias ativas */
+
+function consolidateData(cias){
+    /* Soma valores em USD; retorna objeto consolidado com mesma shape de DATA[cia] */
+    if (cias.length === 0) return null;
+    if (cias.length === 1) return DATA[cias[0]];
+    
+    let bruta=0, tat=0, liq=0, co2=0, vol=0, fleet=0;
+    let bruta_ann=0, fee_fixo=0, delta_per_005=0;
+    let total_rev_usd_bb = 0;
+    let weighted_ebit = 0, total_w = 0;
+    
+    cias.forEach(c => {
+        const d = DATA[c];
+        if (!d) return;
+        const fx = FX_TO_USD[d.currency];  /* converte fontes para USD */
+        bruta += d.bruta_6y * fx;
+        tat += d.tat_6y * fx;
+        liq += d.liq_6y * fx;
+        co2 += d.co2;
+        vol += d.volume_6y;
+        fleet += d.fleet;
+        bruta_ann += d.bruta_ann * fx;
+        fee_fixo += d.fee_fixo * fx;
+        delta_per_005 += d.delta_per_005 * fx;
+        total_rev_usd_bb += d.revenue_usd_bb;
+        const w = d.revenue_usd_bb;
+        weighted_ebit += d.ebit_margin_base * w;
+        total_w += w;
+    });
+    
+    return {
+        currency: 'USD',
+        symbol: 'US$',
+        fleet: fleet,
+        bruta_6y: bruta,
+        tat_6y: tat,
+        liq_6y: liq,
+        bruta_ann: bruta_ann,
+        fee_fixo: fee_fixo,
+        fee_fixo_breakdown: cias.length + ' contratos · honorários por cia',
+        qav_baseline: 5.91,  /* placeholder — consolidado não tem QAV único */
+        delta_per_005: delta_per_005,
+        co2: co2,
+        volume_6y: vol,
+        qav_hub_default: '— múltiplos hubs —',
+        qav_value_default: 'múltiplos · ver por cia',
+        qav_delta_default: 'múltiplos',
+        qav_source_default: 'Consolidado em USD · PTAX Mai/26',
+        hubs: [],  /* sem hub no modo consolidado */
+        ebit_margin_base: total_w > 0 ? weighted_ebit / total_w : 0.04,
+        revenue_usd_bb: total_rev_usd_bb,
+        language: 'pt',
+        voice_text: 'A pressão sobre QAV nas múltiplas geografias força repensar toda eficiência operacional capturável sem CAPEX.',
+        voice_name: 'Consolidado · ' + cias.length + ' operadores',
+        voice_role: cias.join(' · '),
+        is_consolidated: true,
+        cias_list: cias,
+    };
+}
+
+function computeEffective(){
+    if (selectedCias.length === 0) return null;
+    const base = consolidateData(selectedCias);
+    if (!base) return null;
+    const sourceCcy = base.currency;
+    const targetCcy = STATE.currency === 'native' ? sourceCcy : STATE.currency;
+    const fxFactor = fxConvert(1, sourceCcy, targetCcy);
+
+    /* Cenário QAV */
+    const qavDelta = SCENARIO_DELTA[STATE.scenario] || 0;
+    let bruta = base.bruta_6y, tat = base.tat_6y, liq = base.liq_6y;
+    if (qavDelta !== 0){
+        const brutaShift = (qavDelta / 0.05) * base.delta_per_005;
+        const newBruta = bruta + brutaShift;
+        const tatPct = tat / bruta;
+        bruta = newBruta;
+        tat = newBruta * tatPct;
+        liq = newBruta - tat;
+    }
+
+    /* Multiplicadores combinados */
+    const hMult = HORIZON_MULT[STATE.horizon] || 1.0;
+    const acMult = AIRCRAFT_MULT[STATE.aircraft] || 1.0;
+    const combinedMult = hMult * acMult;
+
+    return {
+        baseCia: base,
+        sourceCcy: sourceCcy,
+        targetCcy: targetCcy,
+        symbol: CCY_SYMBOL[targetCcy],
+        bruta: bruta * combinedMult * fxFactor,
+        tat: tat * combinedMult * fxFactor,
+        liq: liq * combinedMult * fxFactor,
+        co2: base.co2 * combinedMult,
+        volume: base.volume_6y * combinedMult,
+        bruta_ann: (bruta / 6) * combinedMult * fxFactor,
+        fee_fixo: base.fee_fixo * fxFactor,
+        fee_fixo_breakdown: base.fee_fixo_breakdown,
+        delta_per_005: base.delta_per_005 * combinedMult * fxFactor,
+        qav_baseline: base.qav_baseline + qavDelta,
+        qav_baseline_target: fxConvert(base.qav_baseline + qavDelta, sourceCcy, targetCcy),
+        qav_hub_default: base.qav_hub_default,
+        qav_value_default: base.qav_value_default,
+        qav_delta_default: base.qav_delta_default,
+        qav_source_default: base.qav_source_default,
+        ebit_margin: base.ebit_margin_base,
+        revenue_usd_bb: base.revenue_usd_bb,
+        revenue_local: base.revenue_usd_bb * 1000 * FX_FROM_USD[targetCcy],
+        fleet: Math.round(base.fleet * acMult),
+        fleet_orig: base.fleet,
+        language: base.language,
+        voice_text: base.voice_text,
+        voice_name: base.voice_name,
+        voice_role: base.voice_role,
+        hubs: base.hubs,
+        horizonLabel: HORIZON_LABEL[STATE.horizon],
+        aircraftLabel: AIRCRAFT_LABEL[STATE.aircraft],
+        scenario: STATE.scenario,
+        hMult: hMult,
+        acMult: acMult,
+        combinedMult: combinedMult,
+    };
+}
+
+/* =====================================================================
+   RENDER
+   ===================================================================== */
+function renderAll(){
+    if (selectedCias.length === 0){
+        document.body.classList.add('no-cia');
+        return;
+    }
+    document.body.classList.remove('no-cia');
+
+    const eff = computeEffective();
+    const $ = (id) => document.getElementById(id);
+
+    /* RAIL labels */
+    if (selectedCias.length === 0) {
+        $('filterCiaValue').textContent = 'Selecione';
+    } else if (selectedCias.length === 1) {
+        $('filterCiaValue').textContent = selectedCias[0];
+    } else if (selectedCias.length === 4) {
+        $('filterCiaValue').textContent = 'Consolidado · 4';
+    } else {
+        $('filterCiaValue').textContent = selectedCias.join(' + ');
+    }
+    $('filterHorizonValue').textContent = HORIZON_LABEL[STATE.horizon];
+    $('filterScenarioValue').textContent = STATE.scenario.charAt(0).toUpperCase() + STATE.scenario.slice(1);
+    $('filterCurrencyValue').textContent = STATE.currency === 'native' ? 'Nativa' : STATE.currency;
+
+    /* Marcadores visuais de filtros não-default */
+    document.getElementById('filterHorizon').classList.toggle('active-filter', STATE.horizon !== '6Y');
+    document.getElementById('filterScenario').classList.toggle('active-filter', STATE.scenario !== 'base');
+    document.getElementById('filterCurrency').classList.toggle('active-filter', STATE.currency !== 'native');
+
+    /* Active menu items */
+    document.querySelectorAll('.rail-menu-item').forEach(it => it.classList.remove('active'));
+    selectedCias.forEach(c => {
+        document.querySelectorAll('[data-cia-multi="' + c + '"]').forEach(it => it.classList.add('active'));
+    });
+    document.querySelectorAll('[data-horizon="' + STATE.horizon + '"]').forEach(it => it.classList.add('active'));
+    document.querySelectorAll('[data-scenario="' + STATE.scenario + '"]').forEach(it => it.classList.add('active'));
+    document.querySelectorAll('[data-currency="' + STATE.currency + '"]').forEach(it => it.classList.add('active'));
+
+    /* SLIDE 1 */
+    let metaParts = [];
+    if (selectedCias.length === 1) {
+        metaParts.push(STATE.cia);
+    } else if (selectedCias.length === 4) {
+        metaParts.push('4 operadores · USD');
+    } else if (selectedCias.length > 1) {
+        metaParts.push(selectedCias.join(' + ') + ' · USD');
+    }
+    metaParts.push(eff.horizonLabel);
+    if (STATE.scenario !== 'base') metaParts.push('Cenário ' + STATE.scenario.charAt(0).toUpperCase() + STATE.scenario.slice(1));
+    if (STATE.aircraft !== 'all') metaParts.push(eff.aircraftLabel);
+    if (STATE.currency !== 'native') metaParts.push(STATE.currency);
+    $('metaSituation').textContent = metaParts.join(' · ');
+
+    $('anchorVolume').textContent = fmt(eff.volume, 1);
+
+    /* QAV hub - escolhe entre hub selecionado e default */
+    let hubDisplay = eff.qav_value_default;
+    let hubDeltaDisplay = eff.qav_delta_default;
+    if (STATE.hub !== 'all' && HUB_QAV[STATE.hub]){
+        hubDisplay = HUB_QAV[STATE.hub];
+    }
+    /* Mostra só o preço médio (primeiro número) */
+    $('sideHubQav').textContent = hubDisplay.replace(' – ', '–').split('–')[0].trim() + '/L';
+    $('sideHubDelta').textContent = hubDeltaDisplay;
+    $('sideFrota').textContent = eff.fleet + ' ac' + (STATE.aircraft !== 'all' ? ' · ' + eff.aircraftLabel : '');
+    $('sideCo2').textContent = fmtInt(eff.co2) + ' kt';
+
+    $('ebitBaseHeadline').textContent = fmt(eff.ebit_margin * 100, 1) + '%';
+    $('ebitBaseSub').textContent = 'EBIT margin típico ' + STATE.cia + ' · baseline conservador · cada bps capturado é defensável em board.';
+
+    /* Lede situation */
+    const ledeMap = {
+        GOL: 'QAV no maior hub doméstico saltou +100% vs Fev/2026. Aviação opera com margens estreitas. Cada litro de combustível economizado vai direto para EBIT.',
+        Azul: 'QAV no maior hub doméstico saltou +100% vs Fev/2026. Frota regional opera com mais variabilidade de LF. Eficiência ground-side neutraliza parte da volatilidade.',
+        TAP: 'QAV em LIS subiu +101% vs 2025 (IATA). EU ETS aumenta o custo carbono. A captura ground-side compõe redução de combustível com redução de exposição regulatória.',
+        Etihad: 'QAV em AUH (Murban benchmark) está +135% vs 2023. Cash flow over headline margin (CEO Etihad). Eficiência operacional não-CAPEX é prioridade declarada do board.'
+    };
+    $('ledeSituation').textContent = ledeMap[STATE.cia] || ledeMap.GOL;
+
+    /* SLIDE 2 - voice */
+    $('voiceText').textContent = eff.voice_text;
+    $('voiceAuthor').textContent = eff.voice_name;
+    $('voiceRole').textContent = eff.voice_role;
+
+    /* SLIDE 3 */
+    $('resCcy').textContent = eff.symbol;
+    $('resLiq').textContent = fmt(eff.liq, 2);
+    /* Hero eyebrow mostra consolidação se aplicável */
+    const heroEyebrowEl = document.querySelector('.slide-hero .hero-eyebrow');
+    if (heroEyebrowEl) {
+        if (selectedCias.length === 1) {
+            heroEyebrowEl.innerHTML = 'Economia líquida · 6 anos · pós honorários TAT';
+        } else if (selectedCias.length === 4) {
+            heroEyebrowEl.innerHTML = 'Economia líquida consolidada · 6 anos · 4 operadores <span class="consolidated-badge">USD</span>';
+        } else {
+            heroEyebrowEl.innerHTML = 'Economia líquida consolidada · 6 anos · ' + selectedCias.join(' + ') + ' <span class="consolidated-badge">USD</span>';
+        }
+    }
+
+    $('brutaCcy').textContent = eff.symbol;
+    $('brutaVal').textContent = fmt(eff.bruta, 2);
+    $('tatCcy').textContent = eff.symbol;
+    $('tatVal').textContent = fmt(eff.tat, 2);
+    $('ratioVal').textContent = fmt(eff.liq / eff.tat, 1) + '×';
+    const ratioEl2 = document.getElementById('ratioVal2');
+    if (ratioEl2) ratioEl2.textContent = fmt(eff.liq / eff.tat, 1) + '×';
+
+    const paybackMonths = (eff.fee_fixo / eff.bruta_ann) * 12;
+    $('paybackVal').textContent = fmt(paybackMonths, 1) + ' meses';
+    const payEl2 = document.getElementById('paybackVal2');
+    if (payEl2) payEl2.innerHTML = fmt(paybackMonths, 1) + '<span style="font-size:18px;color:var(--mute);font-weight:400;"> meses</span>';
+
+    /* EBIT mini-section */
+    const annualSavings = eff.liq / (STATE.horizon === '6Y' ? 6 : STATE.horizon === '3Y' ? 3 : 1);
+    const ebitBase = eff.revenue_local * eff.ebit_margin;
+    const ebitAdj = ebitBase + annualSavings;
+    const ebitAdjPct = ebitAdj / eff.revenue_local;
+    const deltaBps = (ebitAdjPct - eff.ebit_margin) * 10000;
+    $('ebitBaseDisplay').textContent = fmt(eff.ebit_margin * 100, 1);
+    $('ebitAdjDisplay').textContent = fmt(ebitAdjPct * 100, 2);
+    $('ebitBpsValue').textContent = '+' + fmt(deltaBps, 0) + ' bps';
+
+    /* Phases (12% / 23% / 65% da bruta total · sem horizonte cumulativo) */
+    const fullBruta = eff.bruta / eff.hMult;
+    $('phase1Cap').textContent = eff.symbol + ' ' + fmt(fullBruta * 0.12, 1) + ' MM';
+    $('phase2Cap').textContent = eff.symbol + ' ' + fmt(fullBruta * 0.23, 1) + ' MM';
+    $('phase3Cap').textContent = eff.symbol + ' ' + fmt(fullBruta * 0.65, 1) + ' MM';
+
+    /* Foco e visão (body attributes) */
+    if (STATE.focus !== 'all') document.body.setAttribute('data-focus', STATE.focus);
+    else document.body.removeAttribute('data-focus');
+
+    if (STATE.view !== 'full') document.body.setAttribute('data-view', STATE.view);
+    else document.body.removeAttribute('data-view');
+
+    /* Filter pills active state */
+    document.querySelectorAll('.filter-pill').forEach(p => {
+        const grp = p.parentElement.dataset.group;
+        const v = p.dataset.val;
+        p.classList.toggle('active', STATE[grp] === v);
+    });
+
+    /* Hub pills update dinâmico baseado em cia */
+    rebuildHubPills(eff);
+
+    /* Contador "+ Filtros" e reset visibility */
+    updateFilterCounters();
+
+    /* Nav state */
+    document.querySelectorAll('.rail-progress-dot').forEach((d, i) => {
+        d.classList.toggle('active', (i+1) === STATE.slide);
+    });
+    document.querySelectorAll('.slide').forEach(s => {
+        s.classList.toggle('active', parseInt(s.dataset.slide) === STATE.slide);
+    });
+    $('slideLabel').textContent = STATE.slide + ' / 5';
+    document.getElementById('navPrev').classList.toggle('disabled', STATE.slide === 1);
+    document.getElementById('navNext').classList.toggle('disabled', STATE.slide === 5);
+
+    persistState();
+}
+
+/* =====================================================================
+   HUB PILLS DINÂMICAS
+   ===================================================================== */
+function rebuildHubPills(eff){
+    const container = document.getElementById('hubPills');
+    if (!container) return;
+    const hubs = eff.hubs || [];
+    /* Reset hub se não está mais disponível */
+    if (STATE.hub !== 'all' && !hubs.includes(STATE.hub)) STATE.hub = 'all';
+
+    container.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'filter-pill' + (STATE.hub === 'all' ? ' active' : '');
+    allBtn.dataset.val = 'all';
+    allBtn.textContent = 'Todos';
+    container.appendChild(allBtn);
+
+    hubs.forEach(h => {
+        const btn = document.createElement('button');
+        btn.className = 'filter-pill' + (STATE.hub === h ? ' active' : '');
+        btn.dataset.val = h;
+        btn.textContent = h;
+        container.appendChild(btn);
+    });
+
+    /* Re-bind listeners */
+    container.querySelectorAll('.filter-pill').forEach(p => {
+        p.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleFilterPill(p);
+        });
+    });
+}
+
+/* =====================================================================
+   CONTADOR DE FILTROS ATIVOS + RESET BUTTON
+   ===================================================================== */
+function countActiveFilters(){
+    let count = 0;
+    /* Os 4 do painel "+Filtros" */
+    if (STATE.focus !== DEFAULTS.focus) count++;
+    if (STATE.view !== DEFAULTS.view) count++;
+    if (STATE.aircraft !== DEFAULTS.aircraft) count++;
+    if (STATE.hub !== DEFAULTS.hub) count++;
+    return count;
+}
+
+function countAllActiveFilters(){
+    /* Inclui rail (horizon, scenario, currency) + painel */
+    let count = countActiveFilters();
+    if (STATE.horizon !== DEFAULTS.horizon) count++;
+    if (STATE.scenario !== DEFAULTS.scenario) count++;
+    if (STATE.currency !== DEFAULTS.currency) count++;
+    return count;
+}
+
+function updateFilterCounters(){
+    const moreCount = countActiveFilters();
+    const moreCountEl = document.getElementById('moreCount');
+    moreCountEl.textContent = moreCount;
+    moreCountEl.classList.toggle('zero', moreCount === 0);
+
+    const allCount = countAllActiveFilters();
+    document.getElementById('railReset').classList.toggle('hidden', allCount === 0);
+}
+
+/* =====================================================================
+   RESET FILTERS
+   ===================================================================== */
+function resetAllFilters(){
+    STATE.horizon = '6Y';
+    STATE.scenario = 'base';
+    STATE.currency = 'native';
+    STATE.focus = 'all';
+    STATE.view = 'full';
+    STATE.aircraft = 'all';
+    STATE.hub = 'all';
+    renderAll();
+}
+
+/* =====================================================================
+   FILTER PILL HANDLER (painel "+ filtros")
+   ===================================================================== */
+function handleFilterPill(pill){
+    const grp = pill.parentElement.dataset.group;
+    const v = pill.dataset.val;
+    if (!grp || v === undefined) return;
+    STATE[grp] = v;
+    renderAll();
+}
+
+/* =====================================================================
+   AUDIT PANEL CONTENT
+   ===================================================================== */
+function buildAuditContent(key){
+    if (selectedCias.length === 0) return null;
+    const eff = computeEffective();
+    const base = DATA[STATE.cia];
+
+    const AUDITS = {
+        'volume': {
+            title: 'Volume de QAV economizável · ' + eff.horizonLabel,
+            value: fmt(eff.volume, 1) + ' ML',
+            formula: 'Vol_QAV = Σ ano [ V_excedente × k_h × t_voo × eficiência ]\n\n' +
+                     'V_excedente: água embarcada acima do consumo real\n' +
+                     'k_h:         0,0407 L QAV / L água / hora\n' +
+                     't_voo:       horas de voo por aeronave\n' +
+                     'Frota analisada: ' + eff.fleet + ' aeronaves' + (STATE.aircraft !== 'all' ? ' (' + eff.aircraftLabel + ')' : '') + '\n' +
+                     'Multiplicador horizonte: ' + (eff.hMult * 100).toFixed(0) + '%\n' +
+                     'Multiplicador aeronave:  ' + (eff.acMult * 100).toFixed(0) + '%',
+            method: 'Cálculo bottom-up por aeronave. Volume excedente validado contra payload-range pela equação de Breguet aplicada à carga de água potável. Quando filtro de aeronave ativo, escala proporcional baseada em horas-voo médias por categoria.',
+            sources: ['Anexo 720 TAP · Manutenção', 'IATA Aviation Fuel Manual 2011 · §7.3', 'Boeing ATA Chapter 38 · Water/Waste', 'Frota real ' + STATE.cia + ' Mai/26']
+        },
+        'qav-hub': {
+            title: 'QAV no hub' + (STATE.hub !== 'all' ? ' ' + STATE.hub : ' principal'),
+            value: STATE.hub !== 'all' && HUB_QAV[STATE.hub] ? HUB_QAV[STATE.hub] : eff.qav_value_default,
+            formula: 'Hub: ' + (STATE.hub !== 'all' ? STATE.hub : eff.qav_hub_default) + '\n\n' + eff.qav_source_default,
+            method: 'Preço médio ponderado por uplift do operador no hub. Range reflete variabilidade intra-mês. Não inclui taxas, mas inclui frete e impostos federais aplicáveis.',
+            sources: [eff.qav_source_default, 'Validação cruzada · IATA Jet Fuel Monitor']
+        },
+        'qav-delta': {
+            title: 'Alta do QAV vs período base',
+            value: eff.qav_delta_default,
+            formula: 'Comparação: QAV atual / QAV base de referência\n\n' +
+                     'Brasil: Fevereiro 2026\nTAP: 2025\nEtihad: 2023',
+            method: 'Comparação price-to-price sem ajuste de poder de compra. Reflete pressão tanto de Brent (~US$ 180/bbl atual) quanto de spread regional refinaria.',
+            sources: ['Magda Chambriard · Petrobras CEO', 'IEA Oil Market Report · Mai/26', 'ADNOC OSP histórico Murban']
+        },
+        'frota': {
+            title: 'Frota analisada',
+            value: eff.fleet + ' aeronaves' + (STATE.aircraft !== 'all' ? ' · ' + eff.aircraftLabel : ''),
+            formula: 'Frota ' + STATE.cia + ' Mai/2026\n\n' +
+                     'Total: ' + eff.fleet_orig + ' ac\n' +
+                     'Considerada na análise: ' + eff.fleet + ' ac\n' +
+                     (STATE.aircraft !== 'all' ? 'Filtro: somente ' + eff.aircraftLabel : 'Filtro: toda frota') + '\n\n' +
+                     'Multiplicadores por tipo:\n  narrow:  55% da frota efetiva\n  wide:    40%\n  regional: 18%',
+            method: 'Lista de tail numbers validada com base operacional pública. Cada aeronave entra no modelo com k_h específico calibrado por tipo. Multiplicador heurístico aplicado quando filtro de tipo ativo.',
+            sources: ['Cirium Fleet Analyzer', 'ANAC Registro · BR cias', 'planejado vs operacional']
+        },
+        'co2': {
+            title: 'CO₂ evitável · ' + eff.horizonLabel,
+            value: fmtInt(eff.co2) + ' kt',
+            formula: 'CO₂ = Vol_QAV × 2,5 kg/L\n\n' +
+                     'Vol_QAV economizado: ' + fmt(eff.volume, 1) + ' ML\n' +
+                     'Fator de emissão: 2,5 kg CO₂/L (DEFRA 2024)\n' +
+                     'Total: ' + fmtInt(eff.co2) + ' kt CO₂',
+            method: 'Conversão direta do volume de QAV não consumido. Aplicável para CORSIA offsetting, EU ETS aviation scope, ESG report scope 1 emissions, SBTi pathway.',
+            sources: ['DEFRA Greenhouse Gas Reporting · 2024', 'IATA CORSIA Calculator', 'EU ETS Aviation Methodology']
+        },
+        'qav-share': {
+            title: 'QAV no custo operacional',
+            value: '45%',
+            formula: 'COGS · QAV / Receita líquida ≈ 45%\n\n' +
+                     'Aviação comercial brasileira · ABEAR 2026\n' +
+                     'Aviação global: 30-40%',
+            method: 'Percentual ponderado da indústria. Pode variar 38-52% por operador, escala da malha, mix de rotas, política de hedge. Sempre é a maior linha individual de custos.',
+            sources: ['ABEAR · Anuário 2026', 'IATA Industry Economics 2026', 'Cias listadas · 20-F SEC filings']
+        },
+        'demand-peak': {
+            title: 'Pico de demanda jet fuel',
+            value: '+40% Ago vs Mar/26',
+            formula: 'IEA Oil Market Report · Mai/26\n\nFatih Birol (Diretor Executivo IEA):\n"agosto demanda jet fuel +40% vs março — pico verão setentrional"',
+            method: 'Sazonal estrutural: hemisfério norte concentra ~75% da demanda global. Verão = pico operacional. Esse pico se repete anualmente com baixa elasticidade.',
+            sources: ['IEA Oil Market Report · Mai/26', 'Fatih Birol entrevista oficial', 'EIA STEO']
+        },
+        'margin-pressure': {
+            title: 'EBIT margin típico do operador',
+            value: fmt(eff.ebit_margin*100, 1) + '%',
+            formula: 'EBIT margin baseline para ' + STATE.cia + '\n\n' +
+                     'Receita estimada anual: US$ ' + fmt(eff.revenue_usd_bb, 1) + ' bb\n' +
+                     'EBIT margin: ' + fmt(eff.ebit_margin*100, 1) + '%\n' +
+                     'EBIT base: US$ ' + fmt(eff.revenue_usd_bb * 1000 * eff.ebit_margin, 0) + ' MM/ano',
+            method: 'Margem operacional típica conservadora. Cada ponto percentual de eficiência captado aparece linearmente em EBIT.',
+            sources: ['Demonstrações financeiras públicas · 2024-2025', 'IATA Industry Economics', 'Equity research sell-side']
+        },
+        'saf-gap': {
+            title: 'SAF · gap econômico',
+            value: '2-3× premium',
+            formula: 'SAF preço: US$ 4-6/galão (US$ 1,06-1,59/L)\n' +
+                     'QAV preço: US$ 2-3/galão (US$ 0,53-0,79/L)\n' +
+                     'Premium: 2-3× sobre QAV\n\n' +
+                     'Disponibilidade global: <1% do consumo total',
+            method: 'SAF é solução tecnológica necessária mas insuficiente no horizonte 2026-2031. Mandato regulatório crescente sem suprimento à altura. A captura ground-side TAT é complementar, não substitutiva.',
+            sources: ['Argus Sustainable Aviation Fuel', 'IATA SAF Outlook 2026', 'EU ReFuelEU Aviation Regulation']
+        },
+        'fleet-renewal': {
+            title: 'Renovação de frota · lead time',
+            value: '4-7 anos',
+            formula: 'B777-9: entrega 2027-2029\nA350F: certificação Q4/2026\nMAX 10: ramp-up · entregas escalonadas\n\nDecisão de compra → primeira entrega: 4-7 anos',
+            method: 'Aviões novos têm 12-18% melhor eficiência de combustível. Mas cash flow impact aparece após anos de espera. A pressão é hoje, em Q3/26. Solução precisa ser não-CAPEX.',
+            sources: ['Boeing Backlog Q1/2026', 'Airbus Order Book Mar/26', 'ICAO Aircraft Engine Emissions Databank']
+        },
+        'hedge-limit': {
+            title: 'Hedge · limites estruturais',
+            value: '30-50% cobertura',
+            formula: 'Cobertura típica investment-grade carrier:\n' +
+                     '30% por 6-12 meses · 50% pico antes da temporada\n\n' +
+                     'Hedge resolve volatilidade, não nível absoluto.\nBasis risk: derivativo ≠ Jet-A1 físico.',
+            method: 'Hedge é instrumento de gestão de risco, não de redução de custo estrutural. Mesmo com hedge perfeito, o cost-to-serve aumenta junto com o mercado. TAT atua na causa: reduz o volume físico de QAV demandado.',
+            sources: ['Cias listadas · 10-K risk disclosure', 'ICE Brent / NYMEX RBOB curves', 'IATA Fuel Hedging Practices Survey']
+        },
+        'voice-source': {
+            title: 'Citação · fonte',
+            value: eff.voice_name,
+            formula: eff.voice_role + '\n\n"' + eff.voice_text + '"',
+            method: 'Declaração pública sobre tendência estrutural. Inclusão como evidência de consenso de mercado, não como endosso da TAT.',
+            sources: ['Declaração pública oficial', 'Imprensa especializada / earnings call']
+        },
+        'liq-6y': {
+            title: 'Economia líquida · ' + eff.horizonLabel,
+            value: eff.symbol + ' ' + fmt(eff.liq, 2) + ' MM',
+            formula: 'Líquido = Bruta − Honorários TAT\n\n' +
+                     'Bruta:      ' + eff.symbol + ' ' + fmt(eff.bruta, 2) + ' MM\n' +
+                     'Honorários: ' + eff.symbol + ' ' + fmt(eff.tat, 2) + ' MM\n' +
+                     'Líquido:    ' + eff.symbol + ' ' + fmt(eff.liq, 2) + ' MM\n' +
+                     'Razão líq/honorário: ' + fmt(eff.liq/eff.tat, 1) + '×\n\n' +
+                     'Filtros aplicados:\n' +
+                     '  Horizonte: ' + eff.horizonLabel + '\n' +
+                     '  Cenário: ' + STATE.scenario + ' (ΔQAV ' + (SCENARIO_DELTA[STATE.scenario] || 0).toFixed(2) + ')\n' +
+                     '  Aeronave: ' + (eff.aircraftLabel || 'toda frota') + '\n' +
+                     '  Moeda: ' + eff.targetCcy,
+            method: 'Esse é o número que vai para o caixa do operador. Cada $1 pago à TAT retorna ' + fmt(eff.liq/eff.tat, 1) + '× em economia.',
+            sources: ['Estudo TAT ' + STATE.cia + ' · Mai/26', 'Modelo financeiro auditável'],
+            sens: 'qav'
+        },
+        'bruta-6y': {
+            title: 'Economia bruta · ' + eff.horizonLabel,
+            value: eff.symbol + ' ' + fmt(eff.bruta, 2) + ' MM',
+            formula: 'Σ ano [ V_excedente × k_h × t_voo × QAV_local × eficiência ]\n\n' +
+                     'V_excedente: água embarcada acima do consumo real\n' +
+                     'k_h: 0,0407 L QAV / L água / hora\n' +
+                     'QAV_local: ' + eff.symbol + ' ' + fmt(eff.qav_baseline_target, 2) + '/L\n' +
+                     'eficiência: curva de ramp-up por fase',
+            method: 'Cálculo bottom-up por aeronave. Cada perna da malha tem V_excedente próprio, dependendo de pax × LF × duração × fator térmico do destino.',
+            sources: ['Anexo 720 TAP', 'IATA Aviation Fuel Manual', 'Frota e malha ' + STATE.cia + ' Mai/26'],
+            sens: 'qav'
+        },
+        'tat-6y': {
+            title: 'Honorários TAT · ' + eff.horizonLabel,
+            value: eff.symbol + ' ' + fmt(eff.tat, 2) + ' MM',
+            formula: 'Fee Fixo + Σ ano [ % × Bruta(ano) ]\n\n' +
+                     'Fee Fixo: ' + eff.symbol + ' ' + fmt(eff.fee_fixo, 2) + ' MM\n' +
+                     '  · ' + eff.fee_fixo_breakdown + '\n' +
+                     'Success fee: 15% (anos base) + 35% (ano 2027 pico)\n\n' +
+                     '% médio efetivo: ~19%',
+            method: 'Modelo híbrido: fee fixo cobre setup operacional + 6 meses de operação. Success fee escala com captura — alinhando incentivos.',
+            sources: ['Cláusula 4 · Proposta Comercial TAT', 'Termo de honorário híbrido', 'Auditoria SOX-compliant']
+        },
+        'ratio': {
+            title: 'Razão líquido / honorário',
+            value: fmt(eff.liq/eff.tat, 1) + '×',
+            formula: 'Razão = Líquido / Honorários\n\n' +
+                     fmt(eff.liq, 2) + ' / ' + fmt(eff.tat, 2) + ' = ' + fmt(eff.liq/eff.tat, 2) + '×\n\n' +
+                     'Estabilidade: ~4,2× em cenários bear/base/bull',
+            method: 'É a métrica mais importante para defesa em board. Mostra que o success fee variável protege ambos lados. Sempre operador captura ~4× sobre o que paga em fee.',
+            sources: ['Análise de sensibilidade · cenários -50%/0/+75% de QAV']
+        },
+        'payback': {
+            title: 'Payback do fee fixo',
+            value: fmt((eff.fee_fixo/eff.bruta_ann)*12, 1) + ' meses',
+            formula: 'Payback = (Fee Fixo / Bruta Anual) × 12\n\n' +
+                     'Fee Fixo:    ' + eff.symbol + ' ' + fmt(eff.fee_fixo, 2) + ' MM\n' +
+                     'Bruta anual: ' + eff.symbol + ' ' + fmt(eff.bruta_ann, 2) + ' MM\n' +
+                     'Payback:     ~' + fmt((eff.fee_fixo/eff.bruta_ann)*12, 1) + ' meses',
+            method: 'Em menos de 5 meses, a captura cobre o investimento fixo inicial. Após isso, todo R$ adicional é positivo. Compare com projetos típicos: 18-36 meses.',
+            sources: ['Modelo financeiro auditável', 'Cronograma de ramp-up']
+        },
+        'phase-1': {
+            title: 'Fase 01 · Setup',
+            value: eff.symbol + ' ' + fmt(eff.bruta * 0.12 / eff.hMult, 1) + ' MM',
+            formula: 'Captura Fase 01 = 12% da bruta total\n\n' +
+                     'Período: Jan-Jun 2026 (6 meses)\n' +
+                     'Atividades:\n  · Auditoria técnica completa\n  · Calibração k_h por aeronave-tipo\n  · Treinamento equipes\n  · Piloto operacional 10-15% frota',
+            method: 'Fase de baixa captura intencional. Time to value é Q3/26. Honorário variável é 15% — TAT tem incentivo para acelerar ramp-up.',
+            sources: ['Roadmap detalhado · Fase 01']
+        },
+        'phase-2': {
+            title: 'Fase 02 · Ramp-up',
+            value: eff.symbol + ' ' + fmt(eff.bruta * 0.23 / eff.hMult, 1) + ' MM',
+            formula: 'Captura Fase 02 = 23% da bruta total\n\n' +
+                     'Período: Jul/26 – Dez/27 (18 meses)\n' +
+                     'Atividades:\n  · Expansão para 100% frota\n  · Refinamento por rota/aeronave\n  · Integração revenue management\n  · Auditoria SOX-compliant\n  · Pico de captura · 35% success fee',
+            method: 'Pico de captura. Honorário sobe para 35% nesse ano — refletindo que TAT entrega o maior valor quando o operador colhe o maior resultado.',
+            sources: ['Roadmap detalhado · Fase 02']
+        },
+        'phase-3': {
+            title: 'Fase 03 · Steady State',
+            value: eff.symbol + ' ' + fmt(eff.bruta * 0.65 / eff.hMult, 1) + ' MM',
+            formula: 'Captura Fase 03 = 65% da bruta total\n\n' +
+                     'Período: 2028 – 2031 (4 anos)\n' +
+                     'Atividades:\n  · Operação em esteira\n  · Otimização contínua (ML)\n  · Honorário cai para 15%\n  · Saída sem multa qualquer momento',
+            method: 'A maior parte da captura. Honorário cai para 15% — TAT continua sustentando operação sem cobrar prêmio de pico.',
+            sources: ['Roadmap detalhado · Fase 03', 'Cláusula de saída sem multa']
+        },
+    };
+
+    return AUDITS[key] || null;
+}
+
+function openAudit(key){
+    const a = buildAuditContent(key);
+    if (!a) return;
+
+    const body = document.getElementById('auditBody');
+    document.getElementById('auditTitle').textContent = a.title;
+
+    let html = '<div class="audit-value">' + a.value + '</div>';
+
+    if (a.sens === 'qav'){
+        const eff = computeEffective();
+        html += '<div class="audit-sens-control">';
+        html += '  <span class="audit-sens-label">ΔQAV</span>';
+        html += '  <input type="range" min="-1" max="1" step="0.05" value="0" class="audit-sens-slider" id="auditSlider">';
+        html += '  <span class="audit-sens-val" id="auditSliderVal">+0,00</span>';
+        html += '</div>';
+        html += '<div class="audit-sens-result" id="auditSensResult">' + eff.symbol + ' ' + fmt(eff.bruta, 2) + ' MM</div>';
+        html += '<div class="audit-sens-delta" id="auditSensDelta">+0,00 MM</div>';
+        html += '<div style="height: 28px;"></div>';
+    }
+
+    html += '<div class="audit-section">';
+    html += '  <div class="audit-section-label">Fórmula</div>';
+    html += '  <pre class="audit-formula"></pre>';
+    html += '</div>';
+    html += '<div class="audit-section">';
+    html += '  <div class="audit-section-label">Método e premissas</div>';
+    html += '  <p class="audit-prose"></p>';
+    html += '</div>';
+    html += '<div class="audit-section">';
+    html += '  <div class="audit-section-label">Fontes</div>';
+    html += '  <div class="audit-sources"></div>';
+    html += '</div>';
+
+    body.innerHTML = html;
+
+    /* Preencher texto via .textContent para evitar HTML injection */
+    body.querySelector('.audit-formula').textContent = a.formula;
+    body.querySelector('.audit-prose').textContent = a.method;
+    const sourcesEl = body.querySelector('.audit-sources');
+    a.sources.forEach(s => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        span.textContent = '▪';
+        div.appendChild(span);
+        div.appendChild(document.createTextNode(s));
+        sourcesEl.appendChild(div);
+    });
+
+    /* Bind slider */
+    if (a.sens === 'qav'){
+        const slider = document.getElementById('auditSlider');
+        const val = document.getElementById('auditSliderVal');
+        const res = document.getElementById('auditSensResult');
+        const delta = document.getElementById('auditSensDelta');
+        slider.addEventListener('input', () => {
+            const eff = computeEffective();
+            const d = parseFloat(slider.value) || 0;
+            val.textContent = (d>=0?'+':'') + fmt(d, 2);
+            const totalDelta = (d / 0.05) * eff.delta_per_005;
+            const newBruta = eff.bruta + totalDelta;
+            res.textContent = eff.symbol + ' ' + fmt(newBruta, 2) + ' MM';
+            delta.textContent = (totalDelta >= 0 ? '+' : '') + eff.symbol + ' ' + fmt(totalDelta, 2) + ' MM';
+            delta.className = 'audit-sens-delta' + (totalDelta < 0 ? ' neg' : '');
+        });
+    }
+
+    document.getElementById('auditPanel').classList.add('open');
+    document.getElementById('auditBackdrop').classList.add('visible');
+}
+
+function closeAudit(){
+    document.getElementById('auditPanel').classList.remove('open');
+    document.getElementById('auditBackdrop').classList.remove('visible');
+}
+
+/* =====================================================================
+   NAVIGATION
+   ===================================================================== */
+function goToSlide(n){
+    n = Math.max(1, Math.min(5, n));
+    STATE.slide = n;
+    renderAll();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+/* =====================================================================
+   RAIL MENU OPEN/CLOSE
+   ===================================================================== */
+function toggleRailMenu(filterEl){
+    document.querySelectorAll('.rail-filter').forEach(f => {
+        if (f !== filterEl) f.classList.remove('open');
+    });
+    filterEl.classList.toggle('open');
+    document.querySelectorAll('.rail-menu').forEach(m => {
+        m.classList.toggle('open', m.parentElement.classList.contains('open'));
+    });
+}
+function closeAllRailMenus(){
+    document.querySelectorAll('.rail-filter').forEach(f => f.classList.remove('open'));
+    document.querySelectorAll('.rail-menu').forEach(m => m.classList.remove('open'));
+}
+
+/* =====================================================================
+   MORE PANEL (painel "+ filtros")
+   ===================================================================== */
+function toggleMorePanel(){
+    const panel = document.getElementById('morePanel');
+    const btn = document.getElementById('moreToggle');
+    const open = panel.classList.toggle('open');
+    btn.classList.toggle('active', open);
+    document.body.classList.toggle('more-open', open);
+    /* Atualizar só o text node inicial do botão; o span#moreCount permanece intacto */
+    btn.firstChild.textContent = open ? '− Filtros' : '+ Filtros';
+    updateFilterCounters();
+}
+
+/* =====================================================================
+   EVENT BINDINGS
+   ===================================================================== */
+document.addEventListener('DOMContentLoaded', () => {
+    /* Welcome cards */
+    document.querySelectorAll('[data-welcome-cia]').forEach(card => {
+        card.addEventListener('click', () => {
+            selectedCias = [card.dataset.welcomeCia];
+            STATE.cia = card.dataset.welcomeCia;
+            STATE.slide = 1;
+            renderAll();
+        });
+    });
+
+    /* Rail filter triggers */
+    document.querySelectorAll('.rail-filter').forEach(f => {
+        f.addEventListener('click', (e) => {
+            if (e.target.closest('.rail-menu-item')) return;
+            e.stopPropagation();
+            toggleRailMenu(f);
+        });
+    });
+
+    /* Rail menu items */
+    document.querySelectorAll('.rail-menu-item').forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            /* Multi-cia: toggle no array */
+            if (item.dataset.ciaMulti !== undefined){
+                const c = item.dataset.ciaMulti;
+                const idx = selectedCias.indexOf(c);
+                if (idx >= 0) selectedCias.splice(idx, 1);
+                else selectedCias.push(c);
+                if (selectedCias.length > 0) STATE.cia = selectedCias[0];
+                /* NÃO fechar menu — usuário pode marcar várias */
+                renderAll();
+                return;
+            }
+            if (item.dataset.horizon)  STATE.horizon = item.dataset.horizon;
+            if (item.dataset.scenario) STATE.scenario = item.dataset.scenario;
+            if (item.dataset.currency) STATE.currency = item.dataset.currency;
+            closeAllRailMenus();
+            renderAll();
+        });
+    });
+    
+    /* Botões Todas / Limpar */
+    const allBtn = document.getElementById('ciaSelectAll');
+    if (allBtn) allBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectedCias = ['GOL','Azul','TAP','Etihad'];
+        STATE.cia = selectedCias[0];
+        renderAll();
+    });
+    const noneBtn = document.getElementById('ciaSelectNone');
+    if (noneBtn) noneBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectedCias = [];
+        renderAll();
+    });
+
+    /* + Filtros toggle */
+    document.getElementById('moreToggle').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleMorePanel();
+    });
+
+    /* Filter pills (no painel) */
+    document.querySelectorAll('.filter-pill').forEach(p => {
+        p.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleFilterPill(p);
+        });
+    });
+
+    /* Reset button */
+    document.getElementById('railReset').addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetAllFilters();
+    });
+
+    /* Click fora fecha menus do rail */
+    document.addEventListener('click', () => closeAllRailMenus());
+
+    /* Audit triggers */
+    document.querySelectorAll('[data-audit]').forEach(el => {
+        el.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const key = el.dataset.audit;
+            if (key) openAudit(key);
+        });
+    });
+
+    document.getElementById('auditClose').addEventListener('click', closeAudit);
+    document.getElementById('auditBackdrop').addEventListener('click', closeAudit);
+
+    /* Nav */
+    document.getElementById('navPrev').addEventListener('click', () => goToSlide(STATE.slide - 1));
+    document.getElementById('navNext').addEventListener('click', () => goToSlide(STATE.slide + 1));
+
+    /* Progress dots */
+    document.querySelectorAll('.rail-progress-dot').forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            goToSlide(parseInt(dot.dataset.goto));
+        });
+    });
+
+    /* Keyboard */
+    document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+        if (e.key === 'Escape'){ closeAudit(); closeAllRailMenus(); return; }
+        if (selectedCias.length === 0) return;
+        if (e.key === 'ArrowRight' || e.key === ' '){ e.preventDefault(); goToSlide(STATE.slide + 1); }
+        else if (e.key === 'ArrowLeft'){ e.preventDefault(); goToSlide(STATE.slide - 1); }
+        else if (e.key >= '1' && e.key <= '5'){ goToSlide(parseInt(e.key)); }
+    });
+
+    /* Boot */
+    renderAll();
+});
+
+</script>
+</body>
+</html>
